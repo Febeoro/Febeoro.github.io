@@ -60,7 +60,9 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.4.0"></head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"></head>
 
 
 <body>
@@ -242,7 +244,7 @@
 <li>requests库（发送http请求）</li>
 <li>lxml库（xpath解析）</li>
 <li>json库（解析json数据）</li>
-<li>ffmpeg（合并音频和视频）<br><img src="/media/16140769041473.jpg" srcset="/img/loading.gif" lazyload alt="系统数据包库"></li>
+<li>ffmpeg（合并音频和视频）<br><img src="images/16140769041473.jpg" srcset="/img/loading.gif" lazyload alt="系统数据包库"></li>
 </ol>
 <h3 id="功能实现原理"><a href="#功能实现原理" class="headerlink" title="功能实现原理"></a>功能实现原理</h3><ol>
 <li>输入 BV 开头音视频节目编号拼接成为有效的包含音视频节目的 url</li>
@@ -251,11 +253,11 @@
 <li>模拟浏览器请求获取音频和视频资源</li>
 <li>将获得的音频和视频资源合并保存到本地（ffmpeg）</li>
 </ol>
-<h2 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h2><h3 id="了解url结构"><a href="#了解url结构" class="headerlink" title="了解url结构"></a>了解url结构</h3><p>到 Bilibili 首页随便点开一个音视频节目，观察节目的 URL，可以看到该 url 包含一个正常的文件路径和一个参数 p 。<br><img src="/media/16140789360741.jpg" srcset="/img/loading.gif" lazyload alt="-w364"></p>
-<p><img src="/media/16140774185038.jpg" srcset="/img/loading.gif" lazyload alt="节目的 URL"><br>其中，URL 由 B 站主站域名 + video + 节目编号 + 参数 p 节目集数组成。<br>有些节目没有选集，则不需要参数 P，构造获取网页信息的时候不添加该参数即可。</p>
-<h3 id="解析网页，找到下载视频的链接"><a href="#解析网页，找到下载视频的链接" class="headerlink" title="解析网页，找到下载视频的链接"></a>解析网页，找到下载视频的链接</h3><p>打开开发者工具，查找页面元素<code>window.__playinfo__</code>，找到在head标签的第4个 script 标签里面存有视频播放信息，<code>baseUrl</code> 即为视频资源链接<br><img src="/media/16140777507567.jpg" srcset="/img/loading.gif" lazyload alt="网页结构解析"><br><img src="/media/16140779900604.jpg" srcset="/img/loading.gif" lazyload alt="视频资源 url"></p>
-<h3 id="下载视频与音频"><a href="#下载视频与音频" class="headerlink" title="下载视频与音频"></a>下载视频与音频</h3><p>去查看视频资源的网络请求，发现一共有两种请求方式，一种是 GET，另一种是 OPTION。视频资源可能需要先发送 OPTION 请求，获取服务器许可后再请求资源，许可的保持时间较长，所以只发一次 OPTION 请求就可以了。<br><img src="/media/16140782219165.jpg" srcset="/img/loading.gif" lazyload alt="GET"></p>
-<p><img src="/media/16140782012809.jpg" srcset="/img/loading.gif" lazyload alt="OPTION"></p>
+<h2 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h2><h3 id="了解url结构"><a href="#了解url结构" class="headerlink" title="了解url结构"></a>了解url结构</h3><p>到 Bilibili 首页随便点开一个音视频节目，观察节目的 URL，可以看到该 url 包含一个正常的文件路径和一个参数 p 。<br><img src="images/16140789360741.jpg" srcset="/img/loading.gif" lazyload alt="-w364"></p>
+<p><img src="images/16140774185038.jpg" srcset="/img/loading.gif" lazyload alt="节目的 URL"><br>其中，URL 由 B 站主站域名 + video + 节目编号 + 参数 p 节目集数组成。<br>有些节目没有选集，则不需要参数 P，构造获取网页信息的时候不添加该参数即可。</p>
+<h3 id="解析网页，找到下载视频的链接"><a href="#解析网页，找到下载视频的链接" class="headerlink" title="解析网页，找到下载视频的链接"></a>解析网页，找到下载视频的链接</h3><p>打开开发者工具，查找页面元素<code>window.__playinfo__</code>，找到在head标签的第4个 script 标签里面存有视频播放信息，<code>baseUrl</code> 即为视频资源链接<br><img src="images/16140777507567.jpg" srcset="/img/loading.gif" lazyload alt="网页结构解析"><br><img src="images/16140779900604.jpg" srcset="/img/loading.gif" lazyload alt="视频资源 url"></p>
+<h3 id="下载视频与音频"><a href="#下载视频与音频" class="headerlink" title="下载视频与音频"></a>下载视频与音频</h3><p>去查看视频资源的网络请求，发现一共有两种请求方式，一种是 GET，另一种是 OPTION。视频资源可能需要先发送 OPTION 请求，获取服务器许可后再请求资源，许可的保持时间较长，所以只发一次 OPTION 请求就可以了。<br><img src="images/16140782219165.jpg" srcset="/img/loading.gif" lazyload alt="GET"></p>
+<p><img src="image/16140782012809.jpg" srcset="/img/loading.gif" lazyload alt="OPTION"></p>
 <p>这里有两种下载视频的方式：<br>第一种是利用416报错码分片下载，Referer用于写明来源，Range用于规定分片的字节大小以及范围，每下载一定字节的资源，就修改Range，直到最后一次字节数大于剩下的资源时，服务器返回416报错，再重新将Range设置为’Range’: ‘bytes=上一次开始的索引-’。把最后剩下的资源下载下来。每获得一个视频的分片就给他拼接到文件最后，最后得到完整文件。这里使用的是第二种方法，得到了音频和视频两个文件。<br>第二种是不加入Range参数，直接下载整个的音频与视频，只需要注释掉添加请求头Range参数的语句即可。</p>
 <h3 id="合并视频与音频"><a href="#合并视频与音频" class="headerlink" title="合并视频与音频"></a>合并视频与音频</h3><p>对于 Bilibili 2018年以后的视频需要再多一步音频与视频合并的操作，这里通过 ffmpeg 来实现这个功能。安装 ffmpeg 参考45。</p>
 <h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><p>以下代码在参考文献1的基础上进行略微修改，修改部分：combineVideoAudio 函数的命令行输出和 getBiliBiliVideo 函数中 Xpath 定位部分。另外原文是在 Windows 系统下进行的实验，本文在 MAC OS下，因此部分文件路径描述相关问题也有修改。</p>
@@ -307,6 +309,29 @@
                   
                 </p>
               
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/02/23/%E5%8F%8D%E7%88%AC%E7%AD%96%E7%95%A5%E6%80%BB%E7%BB%93/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">反爬策略总结</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/02/11/first-blog/">
+                        <span class="hidden-mobile">First Blog</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
               
             </div>
 

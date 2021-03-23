@@ -60,7 +60,9 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.4.0"></head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"></head>
 
 
 <body>
@@ -230,15 +232,23 @@
             <div class="markdown-body">
               <h3 id="网络属性"><a href="#网络属性" class="headerlink" title="网络属性"></a>网络属性</h3><p>在本节中，我们将研究关键网络属性以表征图形：<strong>聚类系数</strong>，<strong>节点距离</strong>，<strong>度分布</strong>，<strong>联通子图</strong>和<strong>稳定性</strong>。 这些定义主要是针对无向图的，但可以将其扩展为有向图。</p>
 <h4 id="聚类系数（Cluster-Coefficient）"><a href="#聚类系数（Cluster-Coefficient）" class="headerlink" title="聚类系数（Cluster Coefficient）"></a>聚类系数（Cluster Coefficient）</h4><p>聚类系数(针对无向图)用于衡量节点 $i$ 的邻居所占比例。 </p>
-<h5 id="Local-Cluster-Coefficient"><a href="#Local-Cluster-Coefficient" class="headerlink" title="Local Cluster Coefficient"></a>Local Cluster Coefficient</h5><p>一个节点的聚类参数被称为 Local Cluster Coefficient。它的计算方法也是非常的简单粗暴。先计算所有与当前节点连接的节点中间可能构成的 link 有多少个，这个数会作为分母，然后计算实际上有多少个节点被连接上了，这个数会作为分子。最终的计算结果就是 Local Cluster Coefficient。对于度数为 $k_{i}$的节点 $i$，我们计算聚类系数为<br>$$<br>C_{i}=\frac{2e_{i}}{k_{i}(k_{i}-1)}<br>$$<br>其中 $e_{i}$ 是节点 $i$ 的相邻节点之间的边数。 注意 $C_{i}\in[0,1]$ 。 此外，对于度数为0或1的节点，聚类系数是不确定的。</p>
+<h5 id="Local-Cluster-Coefficient"><a href="#Local-Cluster-Coefficient" class="headerlink" title="Local Cluster Coefficient"></a>Local Cluster Coefficient</h5><p>一个节点的聚类参数被称为 Local Cluster Coefficient。它的计算方法也是非常的简单粗暴。先计算所有与当前节点连接的节点中间可能构成的 link 有多少个，这个数会作为分母，然后计算实际上有多少个节点被连接上了，这个数会作为分子。最终的计算结果就是 Local Cluster Coefficient。对于度数为 $k_{i}$的节点 $i$，我们计算聚类系数为</p>
+<script type="math/tex; mode=display">
+C_{i}=\frac{2e_{i}}{k_{i}(k_{i}-1)}</script><p>其中 $e_{i}$ 是节点 $i$ 的相邻节点之间的边数。 注意 $C_{i}\in[0,1]$ 。 此外，对于度数为0或1的节点，聚类系数是不确定的。</p>
 <h5 id="Global-Cluster-Coefficient"><a href="#Global-Cluster-Coefficient" class="headerlink" title="Global Cluster Coefficient"></a>Global Cluster Coefficient</h5><p>知道了如何计算单个节点的聚类系数，现在来看如何计算整个图的 Cluster Coefficient。</p>
 <p>一种最简单粗暴的方法是，先计算每一个节点的 Local Cluster Coefficient，然后取平均值。</p>
-<p>第二种方法，是先计算在图中已经关闭上的三角形的个数，除上没有闭上的三角形的个数。这种计算方法叫做 Transitivity。这两种方法并没有优劣之分，只是 Transitivity 会倾向于给 degree 大的节点较大的权重。<br><img src="media/16164025874161.jpg" srcset="/img/loading.gif" lazyload alt="Transitivity实例"></p>
-<h5 id="平均聚类系数"><a href="#平均聚类系数" class="headerlink" title="平均聚类系数"></a>平均聚类系数</h5><p>同样，可以计算平均聚类系数为：<br>$$<br>C=\frac{1}{N}\sum_{i}^{N}C_{i}<br>$$<br>平均聚类系数使我们能够看到边在网络的某些部分是否显得更加密集。 在社交网络中，平均聚类系数趋于很高，表明如我们期望的那样，朋友的朋友倾向于彼此认识。</p>
-<h4 id="节点距离"><a href="#节点距离" class="headerlink" title="节点距离"></a>节点距离</h4><p>路径是一系列节点，其中每个节点都链接到下一个节点：<br>$$<br>P_{n}=\left{i_{0},i_{1},i_{2},…,i_{n}\right}<br>$$<br>其中 $\left{(i_{0},i_{1}),(i_{1},i_{2}),(i_{2},i_{3}),…(i_{n-1},i_{n})\right} \in E$</p>
+<p>第二种方法，是先计算在图中已经关闭上的三角形的个数，除上没有闭上的三角形的个数。这种计算方法叫做 Transitivity。这两种方法并没有优劣之分，只是 Transitivity 会倾向于给 degree 大的节点较大的权重。<br><img src="images/16164025874161.jpg" srcset="/img/loading.gif" lazyload alt="Transitivity实例"></p>
+<h5 id="平均聚类系数"><a href="#平均聚类系数" class="headerlink" title="平均聚类系数"></a>平均聚类系数</h5><p>同样，可以计算平均聚类系数为：</p>
+<script type="math/tex; mode=display">
+C=\frac{1}{N}\sum_{i}^{N}C_{i}</script><p>平均聚类系数使我们能够看到边在网络的某些部分是否显得更加密集。 在社交网络中，平均聚类系数趋于很高，表明如我们期望的那样，朋友的朋友倾向于彼此认识。</p>
+<h4 id="节点距离"><a href="#节点距离" class="headerlink" title="节点距离"></a>节点距离</h4><p>路径是一系列节点，其中每个节点都链接到下一个节点：</p>
+<script type="math/tex; mode=display">
+P_{n}=\left\{i_{0},i_{1},i_{2},...,i_{n}\right\}</script><p>其中 $\left\{(i_{0},i_{1}),(i_{1},i_{2}),(i_{2},i_{3}),…(i_{n-1},i_{n})\right\} \in E$</p>
 <p>一对节点之间的距离(最短路径，geodesic)定义为沿着连接这些节点的最短路径的边数。 如果两个节点未连接，则距离通常定义为无限(或零)。 还可以将距离视为遍历从一个节点到另一个节点所需的最少节点数。为了获得最短距离，通常可以采用图的深度优先遍历，或者广度优先遍历。对于一个较大的网络，想要获得从一个节点到所有节点的距离，会推荐使用 广度优先遍历，因为广度优先遍历可以一层一层的进行计算距离。</p>
 <p>在有向图中，路径需要遵循箭头的方向。 因此，有向图的距离不是对称的。 对于具有加权边的图，距离是从一个节点到另一个节点所需要遍历的最小边权重。</p>
-<p>图的平均路径长度是所有连接的节点之间中最短路径的平均值。 我们将计算平均路径长度定义为<br>$$<br>\hat{h}=\frac{1}{2 E_{max }} \sum_{i, j \neq i} h_{i j}<br>$$<br>其中 $E_{max}$ 是边或节点对的最大数目；也就是说 $E_{max}=n(n-1)/2$ 和 $h_{ij}$ 是从 $i$ 节点到 $j$ 节点的距离。注意，我们仅计算连接的节点对上的平均路径长度，因此忽略了无限长度的路径。</p>
+<p>图的平均路径长度是所有连接的节点之间中最短路径的平均值。 我们将计算平均路径长度定义为</p>
+<script type="math/tex; mode=display">
+\hat{h}=\frac{1}{2 E_{max }} \sum_{i, j \neq i} h_{i j}</script><p>其中 $E_{max}$ 是边或节点对的最大数目；也就是说 $E_{max}=n(n-1)/2$ 和 $h_{ij}$ 是从 $i$ 节点到 $j$ 节点的距离。注意，我们仅计算连接的节点对上的平均路径长度，因此忽略了无限长度的路径。</p>
 <p>下面是是几个用于描述网络节点距离的参数</p>
 <ul>
 <li>Average distance： 这个很好理解，就是所有两两节点之间的最短距离的平均值，最直接的描述了图的紧密程度</li>
@@ -248,7 +258,7 @@
 <li>Periphery： 和 Diameter 对应，那些最大节点距离等于 diameter 的节点</li>
 <li>Center： 和 Radius 对应，那些最大节点距离等于 radius 的节点</li>
 </ul>
-<h4 id="度分布"><a href="#度分布" class="headerlink" title="度分布"></a>度分布</h4><p>度分布 $P(k)$ 表示随机选择的节点具有度 $k$ 的概率。 图 $G$ 的度分布可以通过归一化的直方图来概括，其中我们通过节点总数来归一化直方图。<br><img src="media/16164042642044.jpg" srcset="/img/loading.gif" lazyload alt="度分布示意图"></p>
+<h4 id="度分布"><a href="#度分布" class="headerlink" title="度分布"></a>度分布</h4><p>度分布 $P(k)$ 表示随机选择的节点具有度 $k$ 的概率。 图 $G$ 的度分布可以通过归一化的直方图来概括，其中我们通过节点总数来归一化直方图。<br><img src="images/16164042642044.jpg" srcset="/img/loading.gif" lazyload alt="度分布示意图"></p>
 <p>我们可以通过 $P(k)=N_{k}/N$ 计算图的度分布。其中，$N_{k}$ 是度为 $k$ 的节点数，$N$ 为节点总数。可以将度分布视为随机选择的节点具有度 $k$ 的概率。</p>
 <p>如果要将这些定义扩展为有向图，需要分别计算入度和出度的分布。</p>
 <h4 id="联通子图"><a href="#联通子图" class="headerlink" title="联通子图"></a>联通子图</h4><p>满足子联通图的充分必要条件有两个：</p>
@@ -275,11 +285,11 @@
 <li>断开一个网络需要的最少的 Node Cuts</li>
 <li>断开一个网络需要的最少的 Edge Cuts</li>
 </ol>
-<p><img src="media/16164037125574.jpg" srcset="/img/loading.gif" lazyload><br>如上图所示，如果我们移除网络中的 A 节点，这个网络就会断开。</p>
+<p><img src="images/16164037125574.jpg" srcset="/img/loading.gif" lazyload alt=""><br>如上图所示，如果我们移除网络中的 A 节点，这个网络就会断开。</p>
 <p>除了断开一个网络，有的时候我们也需要分析 A 节点到 B 节点之间的连接的稳定性，分析链接的稳定的指标也非常类似以上：</p>
 <ol>
 <li>断开两个节点的链接需要的最少的 Node Cuts</li>
-<li>断开两个节点的链接需要的最少的 Edge Cuts<br><img src="media/16164037337473.jpg" srcset="/img/loading.gif" lazyload><br>如上图所示，如果我们移除网络中的 A$\rightarrow$N 和 J$\rightarrow$O 连接，G$\rightarrow$L 的连接将会断开。</li>
+<li>断开两个节点的链接需要的最少的 Edge Cuts<br><img src="images/16164037337473.jpg" srcset="/img/loading.gif" lazyload alt=""><br>如上图所示，如果我们移除网络中的 A$\rightarrow$N 和 J$\rightarrow$O 连接，G$\rightarrow$L 的连接将会断开。</li>
 </ol>
 
             </div>

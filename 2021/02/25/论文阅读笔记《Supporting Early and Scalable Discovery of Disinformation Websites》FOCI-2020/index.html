@@ -60,7 +60,9 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.4.0"></head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"></head>
 
 
 <body>
@@ -262,7 +264,8 @@
 </li>
 </ol>
 <h2 id="2-DESIGN-GOALS-AND-PROBLEM-STATEMENT"><a href="#2-DESIGN-GOALS-AND-PROBLEM-STATEMENT" class="headerlink" title="2 DESIGN GOALS AND PROBLEM STATEMENT"></a>2 DESIGN GOALS AND PROBLEM STATEMENT</h2><p>本文意图进行早期检测——因为检测必须在注册服务商，证书颁发机构，托管服务提供商，社交媒体平台，搜索引擎，浏览器供应商，扩展开发人员，事实检查人员和新闻工作者以及其他Internet利益相关者的响应过程和干预之前进行。</p>
-<h3 id="2-1-Scoping-Disinformation"><a href="#2-1-Scoping-Disinformation" class="headerlink" title="2.1 Scoping Disinformation"></a>2.1 Scoping Disinformation</h3><p>虚假信息的定义在学术文献和公共话语中有所不同[58]。<br><font color=#DC143C><b>共同的组成部分包括</b></font>意图欺骗事实，意图损害和意图迅速散布。<br>许多文章关注“虚假新闻”，关于类别与虚假信息的关系也有不同的定义和不同的概念。出于这项工作的目的，我们使用“虚假信息”一词，并将<font color=#DC143C><b>“虚假信息”网站定义</b></font>为一个似乎提供有关政治和时事新闻的网站，但其运作方式与专业新闻业的规范，标准和道德准则明显不一致。我们将这一类别定义为与合法新闻网站的类别不同，包括那些带有偏执偏见的新闻网站，只要它们遵守新闻准则，例如署名作者，维持矫正政策以及避免过分煽情。</p>
+<h3 id="2-1-Scoping-Disinformation"><a href="#2-1-Scoping-Disinformation" class="headerlink" title="2.1 Scoping Disinformation"></a>2.1 Scoping Disinformation</h3><p>虚假信息的定义在学术文献和公共话语中有所不同[58]。</p>
+<p><font color=#DC143C><b>共同的组成部分包括</b></font>意图欺骗事实，意图损害和意图迅速散布。<br>许多文章关注“虚假新闻”，关于类别与虚假信息的关系也有不同的定义和不同的概念。出于这项工作的目的，我们使用“虚假信息”一词，并将<font color=#DC143C><b>“虚假信息”网站定义</b></font>为一个似乎提供有关政治和时事新闻的网站，但其运作方式与专业新闻业的规范，标准和道德准则明显不一致。我们将这一类别定义为与合法新闻网站的类别不同，包括那些带有偏执偏见的新闻网站，只要它们遵守新闻准则，例如署名作者，维持矫正政策以及避免过分煽情。</p>
 <h3 id="2-2-Website-Domains-as-Granularity-of-Study"><a href="#2-2-Website-Domains-as-Granularity-of-Study" class="headerlink" title="2.2 Website Domains as Granularity of Study"></a>2.2 Website Domains as Granularity of Study</h3><p>网站的域名作为研究的粒度，好处有:</p>
 <ul>
 <li><font color=#DC143C><b>预先警告</b></font>。从原则上讲，可以在发布或分发内容之前识别虚假网站。相比之下，对文章内容或社交媒体活动的分析只能在虚假信息生命周期的较晚阶段进行。</li>
@@ -272,44 +275,48 @@
 </ul>
 <p><font color=#DC143C><b>虚假信息网站只是虚假信息问题空间中的一小部分</b></font>，并且社交媒体在使用户暴露于虚假信息和诱发错误信念方面可能发挥了相对更大的作用。我们的目标是在虚假信息问题空间的离散子集上取得切实进展，为更广阔的领域指明一条前进的道路。</p>
 <h2 id="3-WEBSITE-DATASET"><a href="#3-WEBSITE-DATASET" class="headerlink" title="3 WEBSITE DATASET"></a>3 WEBSITE DATASET</h2><p>使用三类数据：disinformation, news and other.</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
-<th align="center"></th>
-<th align="center">来源</th>
-<th align="center">数量</th>
-<th align="center">其他</th>
+<th style="text-align:center"></th>
+<th style="text-align:center">来源</th>
+<th style="text-align:center">数量</th>
+<th style="text-align:center">其他</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="center">Disinformation Websites</td>
-<td align="center">CBS，FactCheck.org，Snopes，Wikipedia，PoliitiFact，BuzzFeed，OpenSources以及前人的工作</td>
-<td align="center">551</td>
-<td align="center">删除明显的讽刺和党派新闻</td>
+<tbody>
+<tr>
+<td style="text-align:center">Disinformation Websites</td>
+<td style="text-align:center">CBS，FactCheck.org，Snopes，Wikipedia，PoliitiFact，BuzzFeed，OpenSources以及前人的工作</td>
+<td style="text-align:center">551</td>
+<td style="text-align:center">删除明显的讽刺和党派新闻</td>
 </tr>
 <tr>
-<td align="center">News Websites</td>
-<td align="center">从AWIS中随机抽取275个样本；从本地报纸，电视台和杂志的网站目录中随机抽取278个样本</td>
-<td align="center">553</td>
-<td align="center">AWIS排除了100个最受欢迎的网站</td>
+<td style="text-align:center">News Websites</td>
+<td style="text-align:center">从AWIS中随机抽取275个样本；从本地报纸，电视台和杂志的网站目录中随机抽取278个样本</td>
+<td style="text-align:center">553</td>
+<td style="text-align:center">AWIS排除了100个最受欢迎的网站</td>
 </tr>
 <tr>
-<td align="center">Other Websites</td>
-<td align="center">Twitter’s Streaming API 获取555个</td>
-<td align="center">555</td>
-<td align="center">非新闻和政治类别的网站</td>
+<td style="text-align:center">Other Websites</td>
+<td style="text-align:center">Twitter’s Streaming API 获取555个</td>
+<td style="text-align:center">555</td>
+<td style="text-align:center">非新闻和政治类别的网站</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <h2 id="4-FEATURE-ENGINEERING"><a href="#4-FEATURE-ENGINEERING" class="headerlink" title="4 FEATURE ENGINEERING"></a>4 FEATURE ENGINEERING</h2><p>提取以下三类特征：</p>
 <ul>
 <li>域Domain。与注册和操作域名相关的功能，包括DNS注册的属性，域名本身和名称服务器配置——DomainTools API</li>
 <li>证书Certificate。从TLS证书派生的功能，包括证书和证书权限属性——crt.sh Certificate Transparency log database</li>
 <li>托管Hosting。与Web托管基础结构有关的功能，包括网络级和应用程序级属性——Internet Archive Wayback Machine </li>
 </ul>
-<p><img src="/media/16147444703209.jpg" srcset="/img/loading.gif" lazyload alt="提取的域名特征"></p>
-<h2 id="5-TRAINING-AND-TESTING-WITH-HISTORICAL-DATA"><a href="#5-TRAINING-AND-TESTING-WITH-HISTORICAL-DATA" class="headerlink" title="5 TRAINING AND TESTING WITH HISTORICAL DATA"></a>5 TRAINING AND TESTING WITH HISTORICAL DATA</h2><p><img src="/media/16147451797018.jpg" srcset="/img/loading.gif" lazyload alt="检测结果"></p>
-<h2 id="6-PILOT-TEST-OF-REAL-TIME-DISINFORMATION-WEBSITE-DISCOVERY"><a href="#6-PILOT-TEST-OF-REAL-TIME-DISINFORMATION-WEBSITE-DISCOVERY" class="headerlink" title="6 PILOT TEST OF REAL-TIME DISINFORMATION WEBSITE DISCOVERY"></a>6 PILOT TEST OF REAL-TIME DISINFORMATION WEBSITE DISCOVERY</h2><p><img src="/media/16147454797205.jpg" srcset="/img/loading.gif" lazyload alt="流程图"></p>
-<p><img src="/media/16147455140636.jpg" srcset="/img/loading.gif" lazyload alt="结果"></p>
+<p><img src="images/16147444703209.jpg" srcset="/img/loading.gif" lazyload alt="提取的域名特征"></p>
+<h2 id="5-TRAINING-AND-TESTING-WITH-HISTORICAL-DATA"><a href="#5-TRAINING-AND-TESTING-WITH-HISTORICAL-DATA" class="headerlink" title="5 TRAINING AND TESTING WITH HISTORICAL DATA"></a>5 TRAINING AND TESTING WITH HISTORICAL DATA</h2><p><img src="images/16147451797018.jpg" srcset="/img/loading.gif" lazyload alt="检测结果"></p>
+<h2 id="6-PILOT-TEST-OF-REAL-TIME-DISINFORMATION-WEBSITE-DISCOVERY"><a href="#6-PILOT-TEST-OF-REAL-TIME-DISINFORMATION-WEBSITE-DISCOVERY" class="headerlink" title="6 PILOT TEST OF REAL-TIME DISINFORMATION WEBSITE DISCOVERY"></a>6 PILOT TEST OF REAL-TIME DISINFORMATION WEBSITE DISCOVERY</h2><p><img src="images/16147454797205.jpg" srcset="/img/loading.gif" lazyload alt="流程图"></p>
+<p><img src="images/16147455140636.jpg" srcset="/img/loading.gif" lazyload alt="结果"></p>
 <h2 id="7-DISCUSSION"><a href="#7-DISCUSSION" class="headerlink" title="7 DISCUSSION"></a>7 DISCUSSION</h2><p>早期评估的好处：及时发现<br>使用网络特征的优点：Disinfotron的自动化组件使用的功能在识别虚假信息网站方面提供了一定程度的不对称优势，因为试图逃避检测的网站必须对其基础结构进行更改。某些功能将相对容易规避；例如，网站可以轻松更改WordPress主题或续订过期的TLS证书。幸运的是，Disinfotron依赖的许多最重要的功能很难或昂贵地规避。</p>
 <h2 id="8-RELATED-WORK"><a href="#8-RELATED-WORK" class="headerlink" title="8 RELATED WORK"></a>8 RELATED WORK</h2><p>在信息错误测量，检测和标记领域，以及更广泛的在线滥用检测领域，与Disinfotron相关的工作已有开展。</p>
 <h3 id="Disinformation-Ecosystem-Measurement"><a href="#Disinformation-Ecosystem-Measurement" class="headerlink" title="Disinformation Ecosystem Measurement"></a>Disinformation Ecosystem Measurement</h3><p> Several research groups have developed methods for mining disinformation data to build reference datasets [92, 93, 91].</p>
