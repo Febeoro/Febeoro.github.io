@@ -1,0 +1,515 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="123">
+  <meta name="author" content="Febeoro">
+  <meta name="keywords" content="">
+  
+  <title>图网络基础——P1-Introduction and Graph Structure - Febeoro</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"febeoro.github.io","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Febeoro</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="图网络基础——P1-Introduction and Graph Structure">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-03-22 20:03" pubdate>
+        2021年3月22日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      17
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">图网络基础——P1-Introduction and Graph Structure</h1>
+            
+            <div class="markdown-body">
+              <h3 id="图的基本介绍和图结构"><a href="#图的基本介绍和图结构" class="headerlink" title="图的基本介绍和图结构"></a>图的基本介绍和图结构</h3><p>网络成为了用于描述复杂系统中交互实体的通用语言。从图片上讲，与其认为我们的数据集由一组孤立的数据点组成，不如考虑这些点之间的相互作用和关系。</p>
+<p>在不同种类的网络之间进行哲学上的区分是有启发性的。对网络的一种解释是作为现实生活中出现的现象的例子。我们称这些网络为<em>自然图</em>。像如下例子：</p>
+<ul>
+<li>人类社交网络(70+亿个人的集合)</li>
+<li>互联网通信系统(电子设备的集合)</li>
+</ul>
+<p>网络的另一种解释是作为一种数据结构，可用于解决特定的预测问题。在这种情况下，我们对实体之间的关系更感兴趣，因此我们可以有效地执行学习任务。我们称这些网络为<em>信息图</em>，比如：</p>
+<ul>
+<li>场景图(场景中的对象如何相互关联)</li>
+<li>相似性网络(其中连接了数据集中的相似点)</li>
+</ul>
+<p>在本部分内容，我们将主要介绍一些图的基础知识，希望能够通过图的显式建模关系以获得更好的预测性能。此类预测性任务的一些示例包括：</p>
+<ol>
+<li><em>节点分类</em>，我们在其中预测给定节点的类型/颜色</li>
+<li><em>链接预测</em>，我们在其中预测两个节点是否链接</li>
+<li><em>社区检测</em>，我们在其中识别密集链接的节点簇</li>
+<li><em>相似度计算</em>，我们在其中测量两个节点或网络的相似度</li>
+</ol>
+<p>总而言之，<strong>网络是一种用于描述复杂数据的通用语言</strong>，并且可以应用于各种不同的领域。随着数据可用性的提高和各种计算挑战，学习了解网络可以使人们有能力做出各种各样的贡献。</p>
+<h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><p>网络/图形（从技术上讲，网络通常是指真实的系统(网络，社交网络等)，而图形通常是指网络的数学表示形式(网络图，社会图等)。 在这些笔记中，我们将互换使用这些术语。）被定义为对象的集合，其中一些对象对通过链接连接。我们将对象(节点)的集合定义为 $N$， 对象之间的交互(边/链接)定义为 $E$， 将图形定义为 $G(N,E)$。</p>
+<p><strong>无向图</strong>具有对称/双向链接(例如，Facebook上的朋友关系)。我们定义节点度 $k_{i}$ 为无向图中与节点 $i$ 相邻的边数。那么平均程度是<br>$$<br>\bar{k}=\langle k\rangle=\frac{1}{|N|} \sum_{i=1}^{|N|} k_{i}=\frac{2|E|}{N}<br>$$<br><strong>有向图</strong>具有定向链接(例如，在Twitter上关注)。我们定义入度 $k_{i}^{in}$ 为进入节点 $i$ 的边数。同样，我们定义出度 $k_{i}^{out}$ 为离开节点 $i$ 的边数。<br>$$<br>\bar{k}=\langle k\rangle=\frac{|E|}{N}<br>$$<br><strong>完全图</strong>，具有最大数量的边的无向图称为完全图(这样所有节点对都被连接)。完全图有 $|E|=\left(\begin{array}{l}N\2\end{array}\right)=\frac{N(N-1)}{2}$ 条边，并且平均度为 $|N|-1$ 。</p>
+<p><strong>二分图</strong>，二分图是其节点可以分为两个不相交的集和 $U$ 和 $V$，使得每个边都连接一个集合 $U$ 的节点和一个集合 $V$ 的节点（也就是说，集合 $U$ 内的节点没有边，集合 $V$ 内的节点没有边，我们称 $U$和 $V$  为独立的集合）。如果独立集合 $U$ 和 $V$ 共享至少一个共同的邻居，我们可以通过在独立集合中创建边来“折叠”二分图。<br>在这里，如果集合 $U$ 中的节点至少共享一个在 集合 $V$ 中的邻居节点，则集合 $U$  中的节点将相连形成投影 $U$，采用相同的过程来获得投影 $V$。<br><img src="./media/16164606916214.jpg" srcset="/img/loading.gif" lazyload></p>
+<h4 id="图的表示"><a href="#图的表示" class="headerlink" title="图的表示"></a>图的表示</h4><p>我们使用<strong>邻接矩阵</strong> $A$ 来表示图 $G$， 其中 $A_{ij}=1$ 表示节点 $i$ 和 $j$ 相连(如果 $A_{ij}=0$ 则表示没有相邻边)。对于有向图则 $A$ 是不对称的。例如，一个4节点的有向图的邻接矩阵可以表示为<br>$$<br>A=\left[\begin{array}{llll}0 &amp; 1 &amp; 0 &amp; 1 \ 1 &amp; 0 &amp; 0 &amp; 1 \ 0 &amp; 0 &amp; 0 &amp; 1 \ 1 &amp; 1 &amp; 1 &amp; 0\end{array}\right]<br>$$<br>对于无向图，<br>$$<br>k_{i}=\sum_{j=1}^{|N|} A_{i j} \quad \text { and } \quad k_{j}=\sum_{i=1}^{|N|} A_{i j}<br>$$<br>同样，对于有向图，<br>$$<br>k_{i}^{out}=\sum_{j=1}^{|N|} A_{i j} \quad \text { and } \quad k_{j}^{in}=\sum_{i=1}^{|N|} A_{i j}<br>$$<br>但是，大多数现实世界的网络都很稀疏( $|E| \ll E_{max}$ ,or $\bar{k} \ll |N|-1$ )，结果导致邻接矩阵被大量的零填充。</p>
+<p>为了缓解此问题，我们可以将图表示为一组边的集合，从而节省了内存，但是这样使得边的查找困难。</p>
+<h4 id="图的连通"><a href="#图的连通" class="headerlink" title="图的连通"></a>图的连通</h4><p>如果无向图 $G$ 图中任意一对节点之间存在路径，则我们称 $G$ 为<strong>强连通图</strong>。<strong>非强连通图</strong>由两个或多个连接的组件组成。如果移除某一条边将强连通图变为非强连通图，我们称这条边为<strong>桥边</strong>；<strong>关键节点</strong>是指移除改节点后导致强连通图变为非强连通图的节点。具有多个组成部分的网络邻接矩阵可以按块对角线的形式编写(这样，非零元素将被限制为正方形，而所有其他元素均为0)。</p>
+<p>我们可以将这些概念进一步扩展到有向图，将强连接的有向图定义为一个有从某个节点到任何其他节点的路径的图，反之亦然，(即同时具有A→B和B→A的路径)。如果忽略边的方向，则将形成一个弱连接的有向图。我们进一步将<strong>强连接组件(SCCs)<strong>定义为 $G$ 的</strong>强连接子图</strong>。可以到达SCC的节点是其内部组件的一部分，可以从SCC到达的节点是其外部组件的一部分。</p>
+<p>下图虽然已连接但不是强连接图，包含了一个SCC(图 $G’=G[A,B,C]$ )。</p>
+<p><img src="./media/16164606555734.jpg" srcset="/img/loading.gif" lazyload alt="introduction_directed_graph"></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%97%A5%E5%B8%B8%E7%AC%94%E8%AE%B0/">日常笔记</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%97%A5%E5%B8%B8%E7%AC%94%E8%AE%B0/%E6%80%BB%E7%BB%93/">总结</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%97%A5%E5%B8%B8%E7%AC%94%E8%AE%B0/">日常笔记</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%80%BB%E7%BB%93/">总结</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/03/22/%E5%9B%BE%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94P2.1-%E7%BD%91%E7%BB%9C%E5%B1%9E%E6%80%A7/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">图网络基础——P2.1-网络属性</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

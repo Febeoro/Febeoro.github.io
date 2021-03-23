@@ -1,0 +1,557 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="论文《Supporting Early and Scalable Discovery of Disinformation Websites》发表于2020年USENIX Workshop on Free and Open Communications on the Internet, co-located with USENIX Security 2020。">
+  <meta name="author" content="Febeoro">
+  <meta name="keywords" content="">
+  
+  <title>论文阅读笔记：FOCI-2020 Disinformation Websites - Febeoro</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"febeoro.github.io","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Febeoro</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="论文阅读笔记：FOCI-2020 Disinformation Websites">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-25 21:43" pubdate>
+        2021年2月25日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      24
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">论文阅读笔记：FOCI-2020 Disinformation Websites</h1>
+            
+            <div class="markdown-body">
+              <p>论文《Supporting Early and Scalable Discovery of Disinformation Websites》发表于2020年USENIX Workshop on Free and Open Communications on the Internet, co-located with USENIX Security 2020。</p>
+<h1 id="作者和研究团队"><a href="#作者和研究团队" class="headerlink" title="作者和研究团队"></a>作者和研究团队</h1><p>AUSTIN HOUNSEL, Princeton University<br>JORDAN HOLLAND, Princeton University<br>BEN KAISER, Princeton University<br>KEVIN BORGOLTE, Princeton University<br>NICK FEAMSTER, University of Chicago<br>JONATHAN MAYER, Princeton University</p>
+<p>三作的网站：<a target="_blank" rel="noopener" href="https://benkaiser.org/#about">https://benkaiser.org/#about</a></p>
+<h1 id="论文7个问题"><a href="#论文7个问题" class="headerlink" title="论文7个问题"></a>论文7个问题</h1><h3 id="1-本文想解决什么问题"><a href="#1-本文想解决什么问题" class="headerlink" title="1. 本文想解决什么问题?"></a>1. 本文想解决什么问题?</h3><p>假信息网站发现</p>
+<h3 id="2-该问题为什么重要"><a href="#2-该问题为什么重要" class="headerlink" title="2. 该问题为什么重要?"></a>2. 该问题为什么重要?</h3><p>保护网络环境</p>
+<h3 id="3-该问题为什么困难"><a href="#3-该问题为什么困难" class="headerlink" title="3. 该问题为什么困难?"></a>3. 该问题为什么困难?</h3><p>及早发现，及早阻止</p>
+<h3 id="4-前人的研究成果如何"><a href="#4-前人的研究成果如何" class="headerlink" title="4. 前人的研究成果如何?"></a>4. 前人的研究成果如何?</h3><p>更多关注于内容而不是网站</p>
+<h3 id="5-本文的新贡献何在"><a href="#5-本文的新贡献何在" class="headerlink" title="5. 本文的新贡献何在?"></a>5. 本文的新贡献何在?</h3><p>能够实时发现网站，提取host、domain和certificate信息</p>
+<h3 id="6-基本结论"><a href="#6-基本结论" class="headerlink" title="6. 基本结论?"></a>6. 基本结论?</h3><p>有效</p>
+<h3 id="7-本文方法有何假设或者不足"><a href="#7-本文方法有何假设或者不足" class="headerlink" title="7. 本文方法有何假设或者不足?"></a>7. 本文方法有何假设或者不足?</h3><p>数据集一般，实时监测不明显</p>
+<h1 id="本文的各部分内容"><a href="#本文的各部分内容" class="headerlink" title="本文的各部分内容"></a>本文的各部分内容</h1><p>本文的各部分内容如下：</p>
+<ol>
+<li>第1节介绍了本文的背景和贡献</li>
+<li>第2节介绍了我们的设计目标以及如何解决虚假信息检测问题</li>
+<li>第3节介绍了我们如何开发带有标签的网站的数据集，以评估功能以及培训和测试自动网站分类</li>
+<li>第4节介绍了用于区分网站类别的功能工程</li>
+<li>第5节介绍了我们的历史训练数据集，Disinfotron的设计以及对系统对历史数据的自动检测性能的评估</li>
+<li>第6节将Disinfotron应用于来自域注册，证书发行和社交媒体共享的实时提要，这表明该系统在实时部署中有效</li>
+<li>第7节讨论了操作注意事项，包括Disinfotron如何对抗对抗性逃避</li>
+<li>第8节讨论了相关工作</li>
+<li>第9节总结了对未来可能的方向的讨论</li>
+</ol>
+<h2 id="1-INTRODUCTION"><a href="#1-INTRODUCTION" class="headerlink" title="1 INTRODUCTION"></a>1 INTRODUCTION</h2><ol>
+<li>假信息的危害：俄罗斯臭名昭著地部署了虚假信息来干扰2016年美国总统大选</li>
+<li>本文的贡献：<ul>
+<li>标识区分虚假信息，新闻和其他网站的域，证书和托管功能。</li>
+<li>Disinfotron，一种社会技术系统，用于发现可能的虚假信息网站，这些信息可以在网站生命周期的早期进行分类，并且可以在网站投入运营后逐步改善其分类。</li>
+<li>评估Disinfotron在历史和实时数据上的性能，证明该方法可行，准确，可扩展且价格便宜。据我们所知，这是机器学习支持的首次实时部署实时虚假信息发现。</li>
+<li>演示如何在实践中使用Disinfotron的输出，包括概念验证浏览器扩展，该扩展会在访问虚假网站之前警告用户。</li>
+<li>Disinfotron数据集的发布，它是手动标记的信息和新闻网站的最大公共语料库，并带有每个网站的域名，证书和托管功能的档案。</li>
+</ul>
+</li>
+</ol>
+<h2 id="2-DESIGN-GOALS-AND-PROBLEM-STATEMENT"><a href="#2-DESIGN-GOALS-AND-PROBLEM-STATEMENT" class="headerlink" title="2 DESIGN GOALS AND PROBLEM STATEMENT"></a>2 DESIGN GOALS AND PROBLEM STATEMENT</h2><p>本文意图进行早期检测——因为检测必须在注册服务商，证书颁发机构，托管服务提供商，社交媒体平台，搜索引擎，浏览器供应商，扩展开发人员，事实检查人员和新闻工作者以及其他Internet利益相关者的响应过程和干预之前进行。</p>
+<h3 id="2-1-Scoping-Disinformation"><a href="#2-1-Scoping-Disinformation" class="headerlink" title="2.1 Scoping Disinformation"></a>2.1 Scoping Disinformation</h3><p>虚假信息的定义在学术文献和公共话语中有所不同[58]。<br><font color=#DC143C><b>共同的组成部分包括</b></font>意图欺骗事实，意图损害和意图迅速散布。<br>许多文章关注“虚假新闻”，关于类别与虚假信息的关系也有不同的定义和不同的概念。出于这项工作的目的，我们使用“虚假信息”一词，并将<font color=#DC143C><b>“虚假信息”网站定义</b></font>为一个似乎提供有关政治和时事新闻的网站，但其运作方式与专业新闻业的规范，标准和道德准则明显不一致。我们将这一类别定义为与合法新闻网站的类别不同，包括那些带有偏执偏见的新闻网站，只要它们遵守新闻准则，例如署名作者，维持矫正政策以及避免过分煽情。</p>
+<h3 id="2-2-Website-Domains-as-Granularity-of-Study"><a href="#2-2-Website-Domains-as-Granularity-of-Study" class="headerlink" title="2.2 Website Domains as Granularity of Study"></a>2.2 Website Domains as Granularity of Study</h3><p>网站的域名作为研究的粒度，好处有:</p>
+<ul>
+<li><font color=#DC143C><b>预先警告</b></font>。从原则上讲，可以在发布或分发内容之前识别虚假网站。相比之下，对文章内容或社交媒体活动的分析只能在虚假信息生命周期的较晚阶段进行。</li>
+<li><font color=#DC143C><b>长期价值</b></font>。由于新闻周期迅速，虚假信息文章和社交媒体帖子的使用期限固有地受到限制。相比之下，虚假信息网站可以持续数年。</li>
+<li><font color=#DC143C><b>平台独立性</b></font>。无需访问主要在线平台的内部帐户或活动数据，识别虚假信息域是可行的。</li>
+<li><font color=#DC143C><b>生态系统价值</b></font>。虚假信息域的实时提要在整个互联网生态系统中都具有价值，类似于现有的恶意软件，网络钓鱼和欺诈域提要。 网站数据可立即用于各种互联网利益相关者。</li>
+</ul>
+<p><font color=#DC143C><b>虚假信息网站只是虚假信息问题空间中的一小部分</b></font>，并且社交媒体在使用户暴露于虚假信息和诱发错误信念方面可能发挥了相对更大的作用。我们的目标是在虚假信息问题空间的离散子集上取得切实进展，为更广阔的领域指明一条前进的道路。</p>
+<h2 id="3-WEBSITE-DATASET"><a href="#3-WEBSITE-DATASET" class="headerlink" title="3 WEBSITE DATASET"></a>3 WEBSITE DATASET</h2><p>使用三类数据：disinformation, news and other.</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">来源</th>
+<th align="center">数量</th>
+<th align="center">其他</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Disinformation Websites</td>
+<td align="center">CBS，FactCheck.org，Snopes，Wikipedia，PoliitiFact，BuzzFeed，OpenSources以及前人的工作</td>
+<td align="center">551</td>
+<td align="center">删除明显的讽刺和党派新闻</td>
+</tr>
+<tr>
+<td align="center">News Websites</td>
+<td align="center">从AWIS中随机抽取275个样本；从本地报纸，电视台和杂志的网站目录中随机抽取278个样本</td>
+<td align="center">553</td>
+<td align="center">AWIS排除了100个最受欢迎的网站</td>
+</tr>
+<tr>
+<td align="center">Other Websites</td>
+<td align="center">Twitter’s Streaming API 获取555个</td>
+<td align="center">555</td>
+<td align="center">非新闻和政治类别的网站</td>
+</tr>
+</tbody></table>
+<h2 id="4-FEATURE-ENGINEERING"><a href="#4-FEATURE-ENGINEERING" class="headerlink" title="4 FEATURE ENGINEERING"></a>4 FEATURE ENGINEERING</h2><p>提取以下三类特征：</p>
+<ul>
+<li>域Domain。与注册和操作域名相关的功能，包括DNS注册的属性，域名本身和名称服务器配置——DomainTools API</li>
+<li>证书Certificate。从TLS证书派生的功能，包括证书和证书权限属性——crt.sh Certificate Transparency log database</li>
+<li>托管Hosting。与Web托管基础结构有关的功能，包括网络级和应用程序级属性——Internet Archive Wayback Machine </li>
+</ul>
+<p><img src="/media/16147444703209.jpg" srcset="/img/loading.gif" lazyload alt="提取的域名特征"></p>
+<h2 id="5-TRAINING-AND-TESTING-WITH-HISTORICAL-DATA"><a href="#5-TRAINING-AND-TESTING-WITH-HISTORICAL-DATA" class="headerlink" title="5 TRAINING AND TESTING WITH HISTORICAL DATA"></a>5 TRAINING AND TESTING WITH HISTORICAL DATA</h2><p><img src="/media/16147451797018.jpg" srcset="/img/loading.gif" lazyload alt="检测结果"></p>
+<h2 id="6-PILOT-TEST-OF-REAL-TIME-DISINFORMATION-WEBSITE-DISCOVERY"><a href="#6-PILOT-TEST-OF-REAL-TIME-DISINFORMATION-WEBSITE-DISCOVERY" class="headerlink" title="6 PILOT TEST OF REAL-TIME DISINFORMATION WEBSITE DISCOVERY"></a>6 PILOT TEST OF REAL-TIME DISINFORMATION WEBSITE DISCOVERY</h2><p><img src="/media/16147454797205.jpg" srcset="/img/loading.gif" lazyload alt="流程图"></p>
+<p><img src="/media/16147455140636.jpg" srcset="/img/loading.gif" lazyload alt="结果"></p>
+<h2 id="7-DISCUSSION"><a href="#7-DISCUSSION" class="headerlink" title="7 DISCUSSION"></a>7 DISCUSSION</h2><p>早期评估的好处：及时发现<br>使用网络特征的优点：Disinfotron的自动化组件使用的功能在识别虚假信息网站方面提供了一定程度的不对称优势，因为试图逃避检测的网站必须对其基础结构进行更改。某些功能将相对容易规避；例如，网站可以轻松更改WordPress主题或续订过期的TLS证书。幸运的是，Disinfotron依赖的许多最重要的功能很难或昂贵地规避。</p>
+<h2 id="8-RELATED-WORK"><a href="#8-RELATED-WORK" class="headerlink" title="8 RELATED WORK"></a>8 RELATED WORK</h2><p>在信息错误测量，检测和标记领域，以及更广泛的在线滥用检测领域，与Disinfotron相关的工作已有开展。</p>
+<h3 id="Disinformation-Ecosystem-Measurement"><a href="#Disinformation-Ecosystem-Measurement" class="headerlink" title="Disinformation Ecosystem Measurement"></a>Disinformation Ecosystem Measurement</h3><p> Several research groups have developed methods for mining disinformation data to build reference datasets [92, 93, 91].</p>
+<h3 id="Automated-Disinformation-Detection"><a href="#Automated-Disinformation-Detection" class="headerlink" title="Automated Disinformation Detection"></a>Automated Disinformation Detection</h3><p>These results illustrate the difficulty of detecting disinformation based on content.<br>先前关于文章分类的项目除内容[18]外还依赖于上下文特征，例如文章外观（例如，引用数量或长度），[59]，社交网络分析（例如，用户关系，主题标签或交互作用）[40] ，120]，信息传播模式[114、64、113]和风格特征，例如写作的情感基调[69、85]。<br>另一类奖学金产生了识别个别虚假陈述的自动化方法，但成功率有限[106，17，35，41，103]。</p>
+<h3 id="Disinformation-Labeling"><a href="#Disinformation-Labeling" class="headerlink" title="Disinformation Labeling"></a>Disinformation Labeling</h3><p>develop a set of 16 indicators of article credibility [118]</p>
+<h3 id="Abuse-Detection"><a href="#Abuse-Detection" class="headerlink" title="Abuse Detection"></a>Abuse Detection</h3><p>他们的工作的主要结果是，垃圾邮件活动中不成比例的部分来自少数自治系统。随后，网络级功能也已用于区分垃圾邮件与合法电子<br>邮件[44]，指纹僵尸网络[36、84]，识别欺诈活动[56、42]并检测托管非法内容的网站[57]。最近，郝等人。证明垃圾邮件发送者域名注册模式可以预测电子邮件欺诈活动，因为电子邮件欺诈中使用的域名通常是成批注册的，并且包含独特的词法属性[43]。</p>
+<h2 id="9-CONCLUSION"><a href="#9-CONCLUSION" class="headerlink" title="9 CONCLUSION"></a>9 CONCLUSION</h2><p>未来有关的工作将包括集成其他基础架构功能，例如DNSSEC或电子邮件配置，或分析纵向趋势。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/">论文阅读</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Disinformation/">Disinformation</a>
+                    
+                      <a class="hover-with-bg" href="/tags/machine-learning/">machine learning</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

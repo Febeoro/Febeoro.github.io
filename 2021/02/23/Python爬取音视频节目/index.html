@@ -1,0 +1,516 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="今天做了爬取音视频节目的实验，主要针对两类：一是固有链接的音视频节目，二是非固有链接的音视频节目，现总结相关内容。">
+  <meta name="author" content="Febeoro">
+  <meta name="keywords" content="">
+  
+  <title>Python爬取音视频节目 - Febeoro</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"febeoro.github.io","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Febeoro</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Python爬取音视频节目">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-23 17:57" pubdate>
+        2021年2月23日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      28
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python爬取音视频节目</h1>
+            
+            <div class="markdown-body">
+              <p>今天做了爬取音视频节目的实验，主要针对两类：一是固有链接的音视频节目，二是非固有链接的音视频节目，现总结相关内容如下：</p>
+<h1 id="固有链接的音视频节目"><a href="#固有链接的音视频节目" class="headerlink" title="固有链接的音视频节目"></a>固有链接的音视频节目</h1><p>这类网站一般搭建的比较简单，直接获取音视频节目的链接进行保存即可。<br>例子：<a target="_blank" rel="noopener" href="https://www.thepaper.cn/list_26913">https://www.thepaper.cn/list_26913</a>  <a target="_blank" rel="noopener" href="https://haokan.baidu.com/">https://haokan.baidu.com/</a></p>
+<h1 id="非固有链接的音视频节目（以-B-站为例）"><a href="#非固有链接的音视频节目（以-B-站为例）" class="headerlink" title="非固有链接的音视频节目（以 B 站为例）"></a>非固有链接的音视频节目（以 B 站为例）</h1><p>这类音视频节目的获取需要考虑三点:</p>
+<ol>
+<li>CDN：一个音视频节目是否从多个 CDN 上进行获取；</li>
+<li>反爬策略：构造requests请求的时候需要考虑头部信息，比如 Referer和UserAgent</li>
+<li>音视频整合：B 站爬取得到的是音频和视频内容，分别获取之后需要使用工具进行整合</li>
+</ol>
+<h2 id="系统结构"><a href="#系统结构" class="headerlink" title="系统结构"></a>系统结构</h2><h3 id="使用到的工具"><a href="#使用到的工具" class="headerlink" title="使用到的工具"></a>使用到的工具</h3><ol>
+<li>IntelliJ IDEA 2019.1.4</li>
+<li>Python3.8（编程语言）</li>
+<li>requests库（发送http请求）</li>
+<li>lxml库（xpath解析）</li>
+<li>json库（解析json数据）</li>
+<li>ffmpeg（合并音频和视频）<br><img src="/media/16140769041473.jpg" srcset="/img/loading.gif" lazyload alt="系统数据包库"></li>
+</ol>
+<h3 id="功能实现原理"><a href="#功能实现原理" class="headerlink" title="功能实现原理"></a>功能实现原理</h3><ol>
+<li>输入 BV 开头音视频节目编号拼接成为有效的包含音视频节目的 url</li>
+<li>构造 request 请求访问视频页面，得到页面的响应信息</li>
+<li>使用 lxml 库与 json 库从返回的响应信息中提取到视频资源的链接</li>
+<li>模拟浏览器请求获取音频和视频资源</li>
+<li>将获得的音频和视频资源合并保存到本地（ffmpeg）</li>
+</ol>
+<h2 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h2><h3 id="了解url结构"><a href="#了解url结构" class="headerlink" title="了解url结构"></a>了解url结构</h3><p>到 Bilibili 首页随便点开一个音视频节目，观察节目的 URL，可以看到该 url 包含一个正常的文件路径和一个参数 p 。<br><img src="/media/16140789360741.jpg" srcset="/img/loading.gif" lazyload alt="-w364"></p>
+<p><img src="/media/16140774185038.jpg" srcset="/img/loading.gif" lazyload alt="节目的 URL"><br>其中，URL 由 B 站主站域名 + video + 节目编号 + 参数 p 节目集数组成。<br>有些节目没有选集，则不需要参数 P，构造获取网页信息的时候不添加该参数即可。</p>
+<h3 id="解析网页，找到下载视频的链接"><a href="#解析网页，找到下载视频的链接" class="headerlink" title="解析网页，找到下载视频的链接"></a>解析网页，找到下载视频的链接</h3><p>打开开发者工具，查找页面元素<code>window.__playinfo__</code>，找到在head标签的第4个 script 标签里面存有视频播放信息，<code>baseUrl</code> 即为视频资源链接<br><img src="/media/16140777507567.jpg" srcset="/img/loading.gif" lazyload alt="网页结构解析"><br><img src="/media/16140779900604.jpg" srcset="/img/loading.gif" lazyload alt="视频资源 url"></p>
+<h3 id="下载视频与音频"><a href="#下载视频与音频" class="headerlink" title="下载视频与音频"></a>下载视频与音频</h3><p>去查看视频资源的网络请求，发现一共有两种请求方式，一种是 GET，另一种是 OPTION。视频资源可能需要先发送 OPTION 请求，获取服务器许可后再请求资源，许可的保持时间较长，所以只发一次 OPTION 请求就可以了。<br><img src="/media/16140782219165.jpg" srcset="/img/loading.gif" lazyload alt="GET"></p>
+<p><img src="/media/16140782012809.jpg" srcset="/img/loading.gif" lazyload alt="OPTION"></p>
+<p>这里有两种下载视频的方式：<br>第一种是利用416报错码分片下载，Referer用于写明来源，Range用于规定分片的字节大小以及范围，每下载一定字节的资源，就修改Range，直到最后一次字节数大于剩下的资源时，服务器返回416报错，再重新将Range设置为’Range’: ‘bytes=上一次开始的索引-’。把最后剩下的资源下载下来。每获得一个视频的分片就给他拼接到文件最后，最后得到完整文件。这里使用的是第二种方法，得到了音频和视频两个文件。<br>第二种是不加入Range参数，直接下载整个的音频与视频，只需要注释掉添加请求头Range参数的语句即可。</p>
+<h3 id="合并视频与音频"><a href="#合并视频与音频" class="headerlink" title="合并视频与音频"></a>合并视频与音频</h3><p>对于 Bilibili 2018年以后的视频需要再多一步音频与视频合并的操作，这里通过 ffmpeg 来实现这个功能。安装 ffmpeg 参考45。</p>
+<h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><p>以下代码在参考文献1的基础上进行略微修改，修改部分：combineVideoAudio 函数的命令行输出和 getBiliBiliVideo 函数中 Xpath 定位部分。另外原文是在 Windows 系统下进行的实验，本文在 MAC OS下，因此部分文件路径描述相关问题也有修改。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> json<br><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">import</span> subprocess<br><span class="hljs-keyword">import</span> requests<br><span class="hljs-keyword">from</span> lxml <span class="hljs-keyword">import</span> etree<br><br><span class="hljs-comment"># 防止因https证书问题报错</span><br>requests.packages.urllib3.disable_warnings()<br>headers = &#123;<span class="hljs-string">&#x27;User-Agent&#x27;</span>: <span class="hljs-string">&#x27;Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36&#x27;</span>,<br>    <span class="hljs-string">&#x27;Referer&#x27;</span>: <span class="hljs-string">&#x27;https://www.bilibili.com/&#x27;</span>&#125;<br><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">    获取bilibili视频的主要函数</span><br><span class="hljs-string">    @param url 视频页面url 结构为:url?参数</span><br><span class="hljs-string">    @param p 视频p数</span><br><span class="hljs-string">    @param bv 视频bv数</span><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getBiliBiliVideo</span>(<span class="hljs-params">url, p, bv</span>):</span><br>    session = requests.session()<br>    res = session.get(url=url, headers=headers, verify=<span class="hljs-literal">False</span>)<br>    _element = etree.HTML(res.content)<br>    <span class="hljs-comment"># 获取window.__playinfo__的json对象,[20:]表示截取&#x27;window.__playinfo__=&#x27;后面的json字符串</span><br>    <span class="hljs-comment"># videoPlayInfo = str(_element.xpath(&#x27;//head/script[3]/text()&#x27;)[0].encode(&#x27;utf-8&#x27;).decode(&#x27;utf-8&#x27;))[20:]</span><br>    videoPlayInfo = <span class="hljs-built_in">str</span>(_element.xpath(<span class="hljs-string">&#x27;//head/script[5]/text()&#x27;</span>)[<span class="hljs-number">0</span>].encode(<span class="hljs-string">&#x27;utf-8&#x27;</span>).decode(<span class="hljs-string">&#x27;utf-8&#x27;</span>))[<span class="hljs-number">20</span>:]<br>    videoJson = json.loads(videoPlayInfo)<br>    <span class="hljs-comment"># 获取视频链接和音频链接</span><br>    <span class="hljs-keyword">try</span>:<br>        <span class="hljs-comment"># 2018年以后的b站视频由.audio和.video组成</span><br>        videoURL = videoJson[<span class="hljs-string">&#x27;data&#x27;</span>][<span class="hljs-string">&#x27;dash&#x27;</span>][<span class="hljs-string">&#x27;video&#x27;</span>][<span class="hljs-number">0</span>][<span class="hljs-string">&#x27;baseUrl&#x27;</span>]<br>        audioURl = videoJson[<span class="hljs-string">&#x27;data&#x27;</span>][<span class="hljs-string">&#x27;dash&#x27;</span>][<span class="hljs-string">&#x27;audio&#x27;</span>][<span class="hljs-number">0</span>][<span class="hljs-string">&#x27;baseUrl&#x27;</span>]<br>        flag = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">except</span> Exception:<br>        <span class="hljs-comment"># 2018年以前的b站视频音频视频结合在一起,后缀为.flv</span><br>        videoURL = videoJson[<span class="hljs-string">&#x27;data&#x27;</span>][<span class="hljs-string">&#x27;durl&#x27;</span>][<span class="hljs-number">0</span>][<span class="hljs-string">&#x27;url&#x27;</span>]<br>        flag = <span class="hljs-number">1</span><br>    <span class="hljs-comment"># 指定文件生成目录,如果不存在则创建目录</span><br>    dirname = (<span class="hljs-string">&quot;./result&quot;</span>).encode(<span class="hljs-string">&quot;utf-8&quot;</span>).decode(<span class="hljs-string">&quot;utf-8&quot;</span>)<br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> os.path.exists(dirname):<br>        os.makedirs(dirname)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;文件夹创建成功!&#x27;</span>)<br>    <span class="hljs-comment"># 获取每一集的名称</span><br>    name = bv + <span class="hljs-string">&quot;-&quot;</span> + <span class="hljs-built_in">str</span>(p)<br>    <span class="hljs-comment"># 下载视频和音频</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;正在下载 &quot;&#x27;</span> + name + <span class="hljs-string">&#x27;&quot; 的视频····&#x27;</span>)<br>    fileDownload(homeurl=url, url=videoURL, name=<span class="hljs-string">&#x27;./result/&#x27;</span> + name + <span class="hljs-string">&#x27;_Video.mp4&#x27;</span>, session=session)<br>    <span class="hljs-keyword">if</span> flag == <span class="hljs-number">0</span>:<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;正在下载 &quot;&#x27;</span> + name + <span class="hljs-string">&#x27;&quot; 的音频····&#x27;</span>)<br>        fileDownload(homeurl=url, url=audioURl, name=<span class="hljs-string">&#x27;./result/&#x27;</span> + name + <span class="hljs-string">&#x27;_Audio.mp3&#x27;</span>, session=session)<br>        <span class="hljs-comment"># 组合音视频</span><br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;正在组合 &quot;&#x27;</span> + name + <span class="hljs-string">&#x27;&quot; 的视频和音频····&#x27;</span>)<br>        combineVideoAudio(<span class="hljs-string">&#x27;./result/&#x27;</span> + name + <span class="hljs-string">&#x27;_Video.mp4&#x27;</span>,<br>                          <span class="hljs-string">&#x27;./result/&#x27;</span> + name + <span class="hljs-string">&#x27;_Audio.mp3&#x27;</span>,<br>                          <span class="hljs-string">&#x27;./result/&#x27;</span> + name + <span class="hljs-string">&#x27;_output.mp4&#x27;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27; &quot;&#x27;</span> + name + <span class="hljs-string">&#x27;&quot; 下载完成！&#x27;</span>)<br><br><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">    使用session保持会话下载文件</span><br><span class="hljs-string">    @param homeurl 访问来源</span><br><span class="hljs-string">    @param url 音频或视频资源的链接</span><br><span class="hljs-string">    @param name 下载后生成的文件名</span><br><span class="hljs-string">    @session 用于保持会话</span><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">fileDownload</span>(<span class="hljs-params">homeurl, url, name, session=requests.session(<span class="hljs-params"></span>)</span>):</span><br>    <span class="hljs-comment"># 添加请求头键值对,写上 refered:请求来源</span><br>    headers.update(&#123;<span class="hljs-string">&#x27;Referer&#x27;</span>: homeurl&#125;)<br>    <span class="hljs-comment"># 发送option请求服务器分配资源</span><br>    session.options(url=url, headers=headers, verify=<span class="hljs-literal">False</span>)<br>    <span class="hljs-comment"># 指定每次下载1M的数据</span><br>    begin = <span class="hljs-number">0</span><br>    end = <span class="hljs-number">1024</span> * <span class="hljs-number">512</span> - <span class="hljs-number">1</span><br>    flag = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        <span class="hljs-comment"># 添加请求头键值对,写上 range:请求字节范围</span><br>        headers.update(&#123;<span class="hljs-string">&#x27;Range&#x27;</span>: <span class="hljs-string">&#x27;bytes=&#x27;</span> + <span class="hljs-built_in">str</span>(begin) + <span class="hljs-string">&#x27;-&#x27;</span> + <span class="hljs-built_in">str</span>(end)&#125;)<br>        <span class="hljs-comment"># 获取视频分片</span><br>        res = session.get(url=url, headers=headers, verify=<span class="hljs-literal">False</span>)<br>        <span class="hljs-keyword">if</span> res.status_code != <span class="hljs-number">416</span>:<br>            <span class="hljs-comment"># 响应码不为为416时有数据</span><br>            begin = end + <span class="hljs-number">1</span><br>            end = end + <span class="hljs-number">1024</span> * <span class="hljs-number">512</span><br>        <span class="hljs-keyword">else</span>:<br>            headers.update(&#123;<span class="hljs-string">&#x27;Range&#x27;</span>: <span class="hljs-built_in">str</span>(end + <span class="hljs-number">1</span>) + <span class="hljs-string">&#x27;-&#x27;</span>&#125;)<br>            res = session.get(url=url, headers=headers, verify=<span class="hljs-literal">False</span>)<br>            flag = <span class="hljs-number">1</span><br>        <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(name.encode(<span class="hljs-string">&quot;utf-8&quot;</span>).decode(<span class="hljs-string">&quot;utf-8&quot;</span>), <span class="hljs-string">&#x27;ab&#x27;</span>) <span class="hljs-keyword">as</span> fp:<br>            fp.write(res.content)<br>            fp.flush()<br>        <span class="hljs-comment"># data=data+res.content</span><br>        <span class="hljs-keyword">if</span> flag == <span class="hljs-number">1</span>:<br>            fp.close()<br>            <span class="hljs-keyword">break</span><br><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">    用于合并音频与视频</span><br><span class="hljs-string">    @param videopath 视频路径</span><br><span class="hljs-string">    @param audiopath 音频路径</span><br><span class="hljs-string">    @param outpath 生成合并视频的路径</span><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">combineVideoAudio</span>(<span class="hljs-params">videopath, audiopath, outpath</span>):</span><br>    <span class="hljs-comment"># ffmpeg -i videopath -i audiopath -c:v copy -c:a aac -strict experimental outpath</span><br>    command1 = <span class="hljs-string">&#x27;ffmpeg -i &#x27;</span> + videopath + <span class="hljs-string">&#x27; -i &#x27;</span> + audiopath + <span class="hljs-string">&#x27; -c:v copy -c:a aac -strict experimental &#x27;</span> + outpath<br>    <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;./result/output.txt&#x27;</span>, <span class="hljs-string">&#x27;w&#x27;</span>) <span class="hljs-keyword">as</span> file:<br>        subprocess.check_call(command1.encode(<span class="hljs-string">&quot;utf-8&quot;</span>).decode(<span class="hljs-string">&quot;utf-8&quot;</span>), stderr=file, shell=<span class="hljs-literal">True</span>)<br>    os.remove(videopath)<br>    os.remove(audiopath)<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    <span class="hljs-comment"># 输入bilibili视频的BV号 BV1nE411y76r</span><br>    bv = <span class="hljs-built_in">input</span>(<span class="hljs-string">&#x27;视频BV号: &#x27;</span>)<br>    url = <span class="hljs-string">&#x27;https://www.bilibili.com/video/&#x27;</span> + bv<br>    <span class="hljs-comment"># 选择视频从第几p开始到第几p结束</span><br>    startPart = <span class="hljs-built_in">input</span>(<span class="hljs-string">&#x27;起始P: &#x27;</span>)<br>    endPart = <span class="hljs-built_in">input</span>(<span class="hljs-string">&#x27;终止P: &#x27;</span>)<br>    <span class="hljs-keyword">for</span> p <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">int</span>(startPart), <span class="hljs-built_in">int</span>(endPart) + <span class="hljs-number">1</span>):<br>        getBiliBiliVideo(url + <span class="hljs-string">&#x27;?p=&#x27;</span> + <span class="hljs-built_in">str</span>(p), p, bv)<br></code></pre></td></tr></table></figure>
+<p>例子：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1nE411y76r?p=1">https://www.bilibili.com/video/BV1nE411y76r?p=1</a></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li>如何使用Python爬取bilibili视频（详细教程）<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/148988473">https://zhuanlan.zhihu.com/p/148988473</a></li>
+<li>页面元素定位 XPath 简介 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/feeland/p/4829093.html">https://www.cnblogs.com/feeland/p/4829093.html</a></li>
+<li>Python - 调用终端执行命令 <a target="_blank" rel="noopener" href="https://www.aiuai.cn/aifarm949.html">https://www.aiuai.cn/aifarm949.html</a></li>
+<li>FFmpeg的安装和测试 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0b1c98a28fd4">https://www.jianshu.com/p/0b1c98a28fd4</a></li>
+<li>用ffmpeg合并音频和视频 <a target="_blank" rel="noopener" href="https://www.zhihu.com/question/300182407">https://www.zhihu.com/question/300182407</a></li>
+</ol>
+<p>以下是不太重要的资料：</p>
+<ol>
+<li>各种网站视频下载方法 <a target="_blank" rel="noopener" href="https://blog.csdn.net/liujiayu2/article/details/86137139">https://blog.csdn.net/liujiayu2/article/details/86137139</a></li>
+<li>下载有固定链接的视频 <a target="_blank" rel="noopener" href="https://blog.csdn.net/liujiayu2/article/details/86016531">https://blog.csdn.net/liujiayu2/article/details/86016531</a></li>
+<li>批量抓取网页上的视频 <a target="_blank" rel="noopener" href="https://blog.csdn.net/u012162613/article/details/41611889">https://blog.csdn.net/u012162613/article/details/41611889</a></li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%97%A5%E5%B8%B8%E7%AC%94%E8%AE%B0/">日常笔记</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%97%A5%E5%B8%B8%E7%AC%94%E8%AE%B0/%E4%BB%A3%E7%A0%81/">代码</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%88%AC%E8%99%AB/">爬虫</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/">音视频</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
