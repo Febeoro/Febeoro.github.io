@@ -197,7 +197,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      29
+      30
        分钟
     </span>
   
@@ -300,7 +300,7 @@
 <p>在制定图生成模型时，有两个重要的考虑因素。首先是生成现实网络的能力，其次是模型的数学易处理性，这允许对网络属性进行严格的分析。</p>
 <p>Kronecker图模型是一个递归图生成模型，结合了数学易处理性和实际的静态和时态网络属性。Kronecker图模型的直观感受是自相似性，整体具有一个或多个部分的形状相同。<br><img src="/images/16164159318930.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
 <h4 id="Kronecker积"><a href="#Kronecker积" class="headerlink" title="Kronecker积"></a>Kronecker积</h4><p>Kronecker积是一种非标准的矩阵运算，是一种生成自相似矩阵的方法。</p>
-<p>Kronecker积使用 $\otimes$ 来表示。对于两个任意矩阵 $A \in \mathbb{R}^{m \times n}$ 和 $B \in \mathbb{R}^{p \times q}$， $A\otimes B \in \mathbb{R}^{mp \times nq}$，即：</p>
+<p>数学上，Kronecker积是两个任意大小矩阵间的运算，表示为 $\otimes$。对于两个任意矩阵 $A \in \mathbb{R}^{m \times n}$ 和 $B \in \mathbb{R}^{p \times q}$， $A\otimes B \in \mathbb{R}^{mp \times nq}$，即：</p>
 <script type="math/tex; mode=display">
 \textbf{A} \otimes \textbf{B} = \begin{bmatrix}a_{11}\textbf{B} & \dots & a_{1n}\textbf{B} \\
 \vdots &\ddots & \vdots \\
@@ -320,14 +320,17 @@ a_{m1}\textbf{B} & \dots & a_{mn}\textbf{B} \\
 6 & 7 & 12 &  14\\
 0 & 15 & 0 &  20\\
 18 & 21 & 24 &  28
-\end{bmatrix}</script><p>为了在图生成中使用Kronecker积，我们将两个图的Kronecker积定义为两个图的邻接矩阵的Kronecker积。<br>从初始矩阵$K_{1}$(图的邻接矩阵)开始，我们迭代Kronecker积以生成更大的图 $K_{2}=K_{1}\otimes K_{1},K_{3}=K_{2}\otimes K_{1} \dots$，$m$ 阶的Kronecker图定义为</p>
+\end{bmatrix}</script><p>为了在图生成中使用Kronecker积，我们将两个图的Kronecker积定义为两个图的邻接矩阵的Kronecker积。</p>
+<p>从初始矩阵$K_{1}$(图的邻接矩阵)开始，我们迭代Kronecker积以生成更大的图</p>
+<script type="math/tex; mode=display">K_{2}=K_{1}\otimes K_{1},K_{3}=K_{2}\otimes K_{1} \dots</script><p>$m$ 阶的Kronecker图定义为</p>
 <script type="math/tex; mode=display">
 K_{1}^{[m]}=\dots K_{m}=\underbrace{K_1 \otimes K_1 \otimes \dots K_1}_{\text{m times}}=K_{m-1} \otimes K_1</script><p><img src="/images/16164160033041.jpg" srcset="/img/loading.gif" lazyload alt="small_kronecker"></p>
-<p>直观地，可以将Kronecker幂构造想象为图中的社区的递归增长，其中社区中的节点递归地扩展为社区的微型副本。Kronecker初始矩阵 $K_1$ 的选择可以改变，这会迭代影响较大图形的结构。<br><img src="/images/16164159880936.jpg" srcset="/img/loading.gif" lazyload alt="initiator"></p>
-<h4 id="随机的Kronecker图"><a href="#随机的Kronecker图" class="headerlink" title="随机的Kronecker图"></a>随机的Kronecker图</h4><p>到目前为止，我们仅考虑了具有二进制值 ${0,1}$的初始矩阵 $K_1$。但是，从此类初始矩阵生成的图在度数分布和其他属性中具有“阶梯”效应：由于 $K_1$ 的离散性质，个别值非常频繁地出现。</p>
+<p>直观地，可以将Kronecker幂构造想象为图中的社区的递归增长，其中社区中的节点递归地扩展为社区的微型副本。Kronecker初始矩阵 $K_1$ 的选择可以改变，这会迭代影响较大图形的结构。</p>
+<p><img src="/images/16164159880936.jpg" srcset="/img/loading.gif" lazyload alt="initiator"></p>
+<h4 id="随机的Kronecker图"><a href="#随机的Kronecker图" class="headerlink" title="随机的Kronecker图"></a>随机的Kronecker图</h4><p>目前，我们仅考虑了具有二进制值 ${0,1}$的初始矩阵 $K_1$。但是，从此类初始矩阵生成的图在度数分布和其他属性中具有“阶梯”效应：由于 $K_1$ 的离散性质，个别值非常频繁地出现。</p>
 <p>为了消除这种影响，通过放宽初<strong>始矩阵中的条目只能采用二进制值</strong>这个假设来引入随机性。取而代之的是可以采用 $[0,1]$ 范围上的值的矩阵 $\Theta_1$，并且每个值都代表该特定边出现的概率。这样矩阵（以及所有生成的较大矩阵乘积）表示该矩阵在所有可能图上的概率分布。</p>
 <p>更具体地说，对于概率矩阵 $\Theta_1$，我们计算 $k^{th}$ Kronecker幂 $\Theta_k$ 作为大型随机邻接矩阵。每个 $\Theta_k$ 中的值 $p_{uv}$ 则代表边 $(u,v)$ 出现的概率。（请注意，概率总和不必为1，因为每个边缘出现的概率与其他边缘无关）</p>
-<p><img src="https://i.loli.net/2020/06/12/JoiyXHvrLMYltae.png" srcset="/img/loading.gif" lazyload alt="stochastic_graphs"></p>
+<p><img src="/images/16164858812539.jpg" srcset="/img/loading.gif" lazyload alt="stochastic_graphs"></p>
 <p>为了获得图的一个实例，通过以随机邻接矩阵中相应条目给出的概率对每个边进行采样，然后从该分布中进行采样。采样可以被认为是抛具有偏差的硬币的结果，其中偏差被矩阵中的每个条目参数化。</p>
 <p>但是，这意味着简单的生成实例的时间是图形大小的平方，即 $O(N^2)$；当具有100万个节点，我们抛100万$\times$100万次硬币。</p>
 <h4 id="Kronecker-随机图的生成过程"><a href="#Kronecker-随机图的生成过程" class="headerlink" title="Kronecker 随机图的生成过程"></a>Kronecker 随机图的生成过程</h4><p>存在一种快速启发式生成图形的过程，该过程所需时间随着边数量线性变化。</p>
