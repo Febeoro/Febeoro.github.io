@@ -237,7 +237,7 @@
 C_{i}=\frac{2e_{i}}{k_{i}(k_{i}-1)}</script><p>其中 $e_{i}$ 是节点 $i$ 的相邻节点之间的边数。 注意 $C_{i}\in[0,1]$ 。 此外，对于度数为0或1的节点，聚类系数是不确定的。</p>
 <h5 id="Global-Cluster-Coefficient"><a href="#Global-Cluster-Coefficient" class="headerlink" title="Global Cluster Coefficient"></a>Global Cluster Coefficient</h5><p>知道了如何计算单个节点的聚类系数，现在来看如何计算整个图的 Cluster Coefficient。</p>
 <p>一种最简单粗暴的方法是，先计算每一个节点的 Local Cluster Coefficient，然后取平均值。</p>
-<p>第二种方法，是先计算在图中已经关闭上的三角形的个数，除上没有闭上的三角形的个数。这种计算方法叫做 Transitivity。这两种方法并没有优劣之分，只是 Transitivity 会倾向于给 degree 大的节点较大的权重。<br><img src="images/16164025874161.jpg" srcset="/img/loading.gif" lazyload alt="Transitivity实例"></p>
+<p>第二种方法，是先计算在图中已经关闭上的三角形的个数，除上没有闭上的三角形的个数。这种计算方法叫做 Transitivity。这两种方法并没有优劣之分，只是 Transitivity 会倾向于给 degree 大的节点较大的权重。<br><img src="/images/16164025874161.jpg" srcset="/img/loading.gif" lazyload alt="Transitivity实例"></p>
 <h5 id="平均聚类系数"><a href="#平均聚类系数" class="headerlink" title="平均聚类系数"></a>平均聚类系数</h5><p>同样，可以计算平均聚类系数为：</p>
 <script type="math/tex; mode=display">
 C=\frac{1}{N}\sum_{i}^{N}C_{i}</script><p>平均聚类系数使我们能够看到边在网络的某些部分是否显得更加密集。 在社交网络中，平均聚类系数趋于很高，表明如我们期望的那样，朋友的朋友倾向于彼此认识。</p>
@@ -258,7 +258,7 @@ P_{n}=\left\{i_{0},i_{1},i_{2},...,i_{n}\right\}</script><p>其中 $\left\{(i_{0
 <li>Periphery： 和 Diameter 对应，那些最大节点距离等于 diameter 的节点</li>
 <li>Center： 和 Radius 对应，那些最大节点距离等于 radius 的节点</li>
 </ul>
-<h4 id="度分布"><a href="#度分布" class="headerlink" title="度分布"></a>度分布</h4><p>度分布 $P(k)$ 表示随机选择的节点具有度 $k$ 的概率。 图 $G$ 的度分布可以通过归一化的直方图来概括，其中我们通过节点总数来归一化直方图。<br><img src="images/16164042642044.jpg" srcset="/img/loading.gif" lazyload alt="度分布示意图"></p>
+<h4 id="度分布"><a href="#度分布" class="headerlink" title="度分布"></a>度分布</h4><p>度分布 $P(k)$ 表示随机选择的节点具有度 $k$ 的概率。 图 $G$ 的度分布可以通过归一化的直方图来概括，其中我们通过节点总数来归一化直方图。<br><img src="/images/16164042642044.jpg" srcset="/img/loading.gif" lazyload alt="度分布示意图"></p>
 <p>我们可以通过 $P(k)=N_{k}/N$ 计算图的度分布。其中，$N_{k}$ 是度为 $k$ 的节点数，$N$ 为节点总数。可以将度分布视为随机选择的节点具有度 $k$ 的概率。</p>
 <p>如果要将这些定义扩展为有向图，需要分别计算入度和出度的分布。</p>
 <h4 id="联通子图"><a href="#联通子图" class="headerlink" title="联通子图"></a>联通子图</h4><p>满足子联通图的充分必要条件有两个：</p>
@@ -285,11 +285,11 @@ P_{n}=\left\{i_{0},i_{1},i_{2},...,i_{n}\right\}</script><p>其中 $\left\{(i_{0
 <li>断开一个网络需要的最少的 Node Cuts</li>
 <li>断开一个网络需要的最少的 Edge Cuts</li>
 </ol>
-<p><img src="images/16164037125574.jpg" srcset="/img/loading.gif" lazyload alt=""><br>如上图所示，如果我们移除网络中的 A 节点，这个网络就会断开。</p>
+<p><img src="/images/16164037125574.jpg" srcset="/img/loading.gif" lazyload alt=""><br>如上图所示，如果我们移除网络中的 A 节点，这个网络就会断开。</p>
 <p>除了断开一个网络，有的时候我们也需要分析 A 节点到 B 节点之间的连接的稳定性，分析链接的稳定的指标也非常类似以上：</p>
 <ol>
 <li>断开两个节点的链接需要的最少的 Node Cuts</li>
-<li>断开两个节点的链接需要的最少的 Edge Cuts<br><img src="images/16164037337473.jpg" srcset="/img/loading.gif" lazyload alt=""><br>如上图所示，如果我们移除网络中的 A$\rightarrow$N 和 J$\rightarrow$O 连接，G$\rightarrow$L 的连接将会断开。</li>
+<li>断开两个节点的链接需要的最少的 Edge Cuts<br><img src="/images/16164037337473.jpg" srcset="/img/loading.gif" lazyload alt=""><br>如上图所示，如果我们移除网络中的 A$\rightarrow$N 和 J$\rightarrow$O 连接，G$\rightarrow$L 的连接将会断开。</li>
 </ol>
 
             </div>
@@ -329,9 +329,9 @@ P_{n}=\left\{i_{0},i_{1},i_{2},...,i_{n}\right\}</script><p>其中 $\left\{(i_{0
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/03/22/%E5%9B%BE%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94P2-3-%E5%B0%8F%E4%B8%96%E7%95%8C%E7%BD%91%E7%BB%9C/">
+                      <a href="/2021/03/22/%E5%9B%BE%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94P2-2-%E9%9A%8F%E6%9C%BA%E5%9B%BE/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">图网络基础——P2.3-小世界网络</span>
+                        <span class="hidden-mobile">图网络基础——P2.2-随机图</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     

@@ -18,7 +18,7 @@
   <meta name="author" content="Febeoro">
   <meta name="keywords" content="">
   
-  <title>图网络基础——P2.3-小世界网络 - Febeoro</title>
+  <title>图网络基础——P2.2-随机图 - Febeoro</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -165,7 +165,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="图网络基础——P2.3-小世界网络">
+            <span class="h2" id="subtitle" title="图网络基础——P2.2-随机图">
               
             </span>
 
@@ -187,7 +187,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.5k 字
+      1.9k 字
     </span>
   
 
@@ -197,7 +197,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      29
+      22
        分钟
     </span>
   
@@ -227,140 +227,67 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">图网络基础——P2.3-小世界网络</h1>
+            <h1 style="display: none">图网络基础——P2.2-随机图</h1>
             
             <div class="markdown-body">
-              <h3 id="小世界模型"><a href="#小世界模型" class="headerlink" title="小世界模型"></a>小世界模型</h3><h4 id="模型引入"><a href="#模型引入" class="headerlink" title="模型引入"></a>模型引入</h4><p>ER随机图中的聚类系数是一个很小的值，会随着节点数量的增加而持续减小。那么如何在确定最短路径的同时获得一个比较大的距离系数呢?</p>
-<p>实际上，聚类系数反应的是边的局部特性，而ER图的聚类系数和真实网络的差距过大，我们举一个例子<br><img src="/images/16164143108969.jpg" srcset="/img/loading.gif" lazyload alt=""><br>通过上面的例子可以发现，随机图计算出来的聚类系数和真实的聚类系数的数量级相差至少在 10^2 以上。</p>
-<p>在网格网络中，我们实现了三角闭合和高聚类系数，但是平均路径长度较长。</p>
-<p><img src="/images/16164850149259.jpg" srcset="/img/loading.gif" lazyload alt="grid_network.png"></p>
-<p>在随机网络中，我们实现了较短的平均路径长度，但聚类系数较低。</p>
-<p><img src="/images/16164850351385.jpg" srcset="/img/loading.gif" lazyload alt="random_network"></p>
-<p>基于以上两个图结构，似乎不能直观地得到一个具有较短的平均路径长度，同时也具有较高的聚类系数的图。但是，大多数现实世界网络具有如下表所示的属性，其中 $h$ 是平均最短路径长度，$c$ 是平均聚类系数为，了便于比较，随机图的平均度与实际网络相同。</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th style="text-align:center">网络类型</th>
-<th style="text-align:center"><strong>$h_{actual}$</strong></th>
-<th style="text-align:center"><strong>$h_{random}$</strong></th>
-<th style="text-align:center"><strong>$c_{actual}$</strong></th>
-<th style="text-align:center"><strong>$c_{random}$</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">电影演员</td>
-<td style="text-align:center">3.65</td>
-<td style="text-align:center">2.99</td>
-<td style="text-align:center">0.79</td>
-<td style="text-align:center">0.00027</td>
-</tr>
-<tr>
-<td style="text-align:center">电力网络</td>
-<td style="text-align:center">18.70</td>
-<td style="text-align:center">12.40</td>
-<td style="text-align:center">0.080</td>
-<td style="text-align:center">0.005</td>
-</tr>
-<tr>
-<td style="text-align:center">C.elegans</td>
-<td style="text-align:center">2.65</td>
-<td style="text-align:center">2.25</td>
-<td style="text-align:center">0.28</td>
-<td style="text-align:center">0.05</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>同时满足以上标准的<strong>高聚类系数</strong>和<strong>小平均路径长度</strong>的网络（数学上定义为 $L\propto \log N$，其中 $L$ 是平均路径长度，$N$ 是网络中的节点的总数）称为小型世界网络。</p>
-<h4 id="小世界模型-1"><a href="#小世界模型-1" class="headerlink" title="小世界模型"></a>小世界模型</h4><p>1998年，Duncan J. Watts和Steven Strogatz提出了一个模型，该模型用于构建具有高聚类和较短平均路径长度的网络。他们将此模型称为“小世界模型”。要创建这样的模型，我们采用以下步骤：</p>
+              <h3 id="随机图算法"><a href="#随机图算法" class="headerlink" title="随机图算法"></a>随机图算法</h3><h4 id="ER随机图算法"><a href="#ER随机图算法" class="headerlink" title="ER随机图算法"></a>ER随机图算法</h4><p>Erdös-Rényi随机图模型是最简单的图模型。这个简单的模型具有经过验证的网络属性，并且是比较实际现实世界图属性的良好基准。<br>此随机图模型有两个变体：</p>
 <ol>
-<li><p>低维度的规则格<br>在我们实际的情况中，我们可以将图中的环视为一个格。从低维度的常规环开始，通过将每个节点连接到右侧的 $k$ 个邻居和左侧的 $k$ 个邻居， 其中 $k\geq2$。<br><img src="/images/16164155897022.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
-</li>
-<li><p>重新连线，生成捷径<br>添加或者删除一些边，依次来将一些“捷径”以概率 $p$ 加入到距离较远的格部分。<br><img src="/images/16164154602809.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
-</li>
+<li>$G_{np}$: 具有 $n$ 个节点的无向图，并且每条边 $(u,v)$ 出现的概率符合概率为 $p$ 的独立同步分布</li>
+<li>$G_{nm}$: 具有n个节点的无向图，随机地均匀地选择 $m$ 条边</li>
 </ol>
-<p>然后，我们进行以下观察：</p>
+<p>请注意，$G_{np}$ 和 $ G_{nm}$图不是唯一确定的，而是随机产生的。 在ER生成算法中，通过n个节点和边的生成概率P来生成的无向图不是唯一的，如下图所示：<br><img src="/images/16164044116677.jpg" srcset="/img/loading.gif" lazyload alt=""><br>根据上图所示，我们可以根据n个节点和概率p来生成不同的边来生成一个随机的图。</p>
+<h4 id="ER图的相关属性"><a href="#ER图的相关属性" class="headerlink" title="ER图的相关属性"></a>ER图的相关属性</h4><h5 id="ER图的度分布"><a href="#ER图的度分布" class="headerlink" title="ER图的度分布"></a>ER图的度分布</h5><p>ER图 $G_{np}$ 的度分布符合二项分布，设 $P(k)$ 表示具有度为 $k$ 的节点数，则</p>
+<script type="math/tex; mode=display">
+P(k)=\left(\begin{array}{c}
+n-1 \\
+k
+\end{array}\right) p^{k}(1-p)^{n-1-k}</script><p><img src="/images/16164046019276.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>如果一个节点的度为 $k$，那么在图中，除了他自身之外就有 $N-1$ 个节点中的 $k$ 个节点需要和其相连接。对于该节点而言，产生一条边的概率为 $p$，并且边的产生是独立同分布的，那么也就是说该点生成 $k$ 条边的概率为 $p^k$，剩余 $n-1-k$ 个节点与该节点没有产生边，那么也就是说其概率为$(1−p)^{n−1−k}$。</p>
+<p>二项分布的均值为：</p>
+<script type="math/tex; mode=display">\bar{k}=p(n-1)</script><p>二项分布的方差为：</p>
+<script type="math/tex; mode=display">\sigma^{2}=p(1-p)(n-1)</script><p>而其标准差和均值的比值为：</p>
+<script type="math/tex; mode=display">
+\frac{\sigma}{\bar{k}}=\left[\frac{1-p}{p} \frac{1}{n-1}\right]^{1 / 2} \approx \frac{1}{(n-1)^{\frac{1}{2}}}</script><p>二项式分布的一个特性是，根据数字定律，随着网络规模的增加，度的分布原来越集中，分布变得越来越狭窄。也就是说，图中的节点的概率分布越来越接近，节点的度在 $k$ 附近。如果图具有无限个节点，则所有节点将具有相同的度数。（大数分布）</p>
+<p><img src="/images/16164049055536.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
+<h5 id="ER图的聚类系数"><a href="#ER图的聚类系数" class="headerlink" title="ER图的聚类系数"></a>ER图的聚类系数</h5><p>聚类系数的计算公式为 $C_{i}=\frac{2e_{i}}{k_{i}(k_{i}-1)}$ 其中 $e_{i}$ 是节点 $i$ 的相邻节点之间的边数。因为在 $G_{np}$ 中边出现的概率符合概率为 $p$ 的独立同分布，所以图 $G_{np}$ 中期望的 $e_{i}$ 为</p>
+<script type="math/tex; mode=display">\mathbb{E}\left[e_{i}\right]=p \frac{k_{i}\left(k_{i}-1\right)}{2}</script><p>这是因为 $\frac {k_{i}(k_{i}-1)} {2}$ 是度为 $k_{i}$ 的节点 $i$ 的邻居的不同对的数量，并且每一对以概率 $p$ 相连接。</p>
+<p>因此，期望的聚类系数为：</p>
+<script type="math/tex; mode=display">
+\mathbb{E}\left[C_{i}\right]=\frac{p \cdot k_{i}\left(k_{i}-1\right)}{k_{i}\left(k_{i}-1\right)}=p=\frac{\bar{k}}{n-1} \approx \frac{\bar{k}}{n}</script><p>$\bar{k}$ 表示平均度，从上面公式可以得到，$G_{np}$ 的聚类系数非常小，如果我们以固定的平均度生成 $\bar{k}$ 一个非常非常大的图，那么 $C$ （即聚类系数）随着规模 $n$ 的增大而减小。$\mathbb{E}\left[C_{i}\right] \rightarrow 0$ as $n \rightarrow \infty$。</p>
+<h5 id="ER图的路径"><a href="#ER图的路径" class="headerlink" title="ER图的路径"></a>ER图的路径</h5><h6 id="扩展因子"><a href="#扩展因子" class="headerlink" title="扩展因子"></a>扩展因子</h6><p>首先定义<strong>扩展系数</strong>的概念。图 $G(V,E)$ 对于 $\forall S \subset V$ 具有扩展系数 $\alpha$ ，剩下的边的数量 $S \geq \alpha \cdot \min (|S|,|V \backslash S|)$。<br>用一个图来展示一下：</p>
+<p><img src="/images/16164119584155.jpg" srcset="/img/loading.gif" lazyload alt=""><br>扩展系数回答了一个问题，即“如果我们随机选择一组节点，那么有多少条边要离开该组？” 扩展系数是一种鲁棒性的度量：要断开 $\ell \ell$ 个节点，必须切断 $≥\alpha⋅\ell$边缘。<br>同样的，我们也可以认为图 $G(V,E)$ 具有扩展系数 $\alpha$ </p>
+<script type="math/tex; mode=display">
+\alpha=\min _{S \subset V} \frac{\# \text { edges leaving } S}{\min (|S|,|V \backslash S|)}</script><h6 id="多个随机图结构"><a href="#多个随机图结构" class="headerlink" title="多个随机图结构"></a>多个随机图结构</h6><p>对一个原始的随机图，我们可以将其拆分成多个随机子图，拆分的过程满足我们上面定义的扩展因子的中的公式定义，如下图所示：<br><img src="/images/16164120596236.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>关于扩展系数的一个重要事实是，在具有 $n$ 个节点且扩展系数为 $\alpha$ 的图中，对于所有的节点对，将有 $O((\log n)/\alpha)$ 条路径连接他们。对于一个随机的 $G_{np}$ 图，$\log n&gt;n p&gt;c$，所以，$diam(G_{np})=O(\log n/ \log(np))$，因此，我们可以看到随机图具有良好的扩展性，因此BFS访问所有节点的步数为对数。</p>
+<p>我们将原始的n个节点的随机图可以拆分成三个子图，其中子图中的边的数量关系满足我们之前的数量定义。我们以左边的第一图中某一个节点开始，我们寻找其和其他子图中的节点之间的路径，我们不难发现，从某一个节点开始，这种查找的过程很类似于一个树结构。如下图所示：<br><img src="/images/16164121109961.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>根据树的特性，两个节点之间的路径的长度是一种对数的长度，也就是说整个图中任意的两个节点之间的最大的路径长度为 $O((\log (n)) / \alpha)$。因此 $G_{np}$ 的路径长度为 $O(\log n)$。尽管随机图中节点数量上涨的很快，但是节点的之间的最短距离的上涨速度通过对数规律，其上涨的速度是很慢的。其上涨的规律如下图所示：</p>
+<p><img src="/images/16164129995570.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
+<h5 id="ER图的连通子图"><a href="#ER图的连通子图" class="headerlink" title="ER图的连通子图"></a>ER图的连通子图</h5><p>首先，我们先给出关于概率p增长和图的关系，如下图所示：<br><img src="/images/16164131300979.jpg" srcset="/img/loading.gif" lazyload alt="">从上面的图中，可以确定以下几种情况：</p>
 <ul>
-<li>在 $p=0$ 没有发生重新连接边的地方，这仍然是具有高簇集，大直径的网格网络。</li>
-<li>对于 $0&lt;p&lt;1$ ，某些边缘已经进行了重新连线，但是大部分结构仍然保留。这意味着<strong>localoity</strong>和<strong>shortcuts</strong>。</li>
-<li>对于 $p=1$，所有边缘都进行了随机重新连接，这是一个具有低聚类，低直径的ErdősRényi (ER)随机图。</li>
+<li>当 $p$ 的值为$\frac{1}{(n-1)}$ 的时候，会出现巨大的连通子图</li>
+<li>当 $p$ 的值为 $\frac{c}{(n-1)}$ 的时候，会生成大量的孤立点</li>
+<li>当 $p$ 的值为 $\frac{log(n)}{(n-1)}$ 的时候，孤立节点的数量会减少</li>
+<li>当 $p$ 的值为 $\frac{2*log(n)}{(n-1)}$ 的时候，孤立节点消失</li>
+<li>当 $p$ 的值为1的时候，随机图是一个完全图</li>
 </ul>
-<p><img src="/images/16164658314955.jpg" srcset="/img/loading.gif" lazyload alt="clustering_path.png"></p>
-<p>小世界模型通过重新连接概率 $p \in[0,1]$ 来参数化。观察聚类系数和平均路径长度如何随 $p$ 的变化——平均路径长度随着 $p$ 增加而下降得更快，而聚类系数仍然相对较高。重新布线引入了shortcuts，这使得在结构保持相对坚固（高度聚类）的情况下，平均路径长度也可以减小。</p>
-<p>从社交网络的角度来看，这种现象是直观的。虽然我们的大多数朋友都是本地人，但我们在不同国家/地区也有一些远距离的友谊，这足以使人类社交网络的直径崩溃，从而解释了流行的“六度分离”概念。</p>
-<p>Watts-Strogatz小世界模型的两个局限性在于其度的分布与现实网络的幂律分布不匹配，并且由于假定了网络的大小，因此无法对网络的增长进行建模。</p>
-<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><ol>
-<li>通过小世界模型，只要确定合适的概率p，我们就可以获得一个比较小的图的直径，同时获得比较大的聚类系数。也就是在聚类系数和直径之间做出来一个平衡</li>
-<li>更容易去捕捉局部特征</li>
-<li>由于更高的聚类系数，所以更好的去模拟了真实的网络</li>
-</ol>
-<h3 id="克罗内克-Kroneker-图模型"><a href="#克罗内克-Kroneker-图模型" class="headerlink" title="克罗内克(Kroneker) 图模型"></a>克罗内克(Kroneker) 图模型</h3><h4 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h4><p>图生成的模型已被广泛研究。这些模型使我们能够在收集实际图困难时生成用于仿真和假设检验的图，并且还使我们可以检查生成模型应遵循的某些现实属性。</p>
-<p>在制定图生成模型时，有两个重要的考虑因素。首先是生成现实网络的能力，其次是模型的数学易处理性，这允许对网络属性进行严格的分析。</p>
-<p>Kronecker图模型是一个递归图生成模型，结合了数学易处理性和实际的静态和时态网络属性。Kronecker图模型的直观感受是自相似性，整体具有一个或多个部分的形状相同。<br><img src="/images/16164159318930.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
-<h4 id="Kronecker积"><a href="#Kronecker积" class="headerlink" title="Kronecker积"></a>Kronecker积</h4><p>Kronecker积是一种非标准的矩阵运算，是一种生成自相似矩阵的方法。</p>
-<p>Kronecker积使用 $\otimes$ 来表示。对于两个任意矩阵 $A \in \mathbb{R}^{m \times n}$ 和 $B \in \mathbb{R}^{p \times q}$， $A\otimes B \in \mathbb{R}^{mp \times nq}$，即：</p>
-<script type="math/tex; mode=display">
-\textbf{A} \otimes \textbf{B} = \begin{bmatrix}a_{11}\textbf{B} & \dots & a_{1n}\textbf{B} \\
-\vdots &\ddots & \vdots \\
-a_{m1}\textbf{B} & \dots & a_{mn}\textbf{B} \\
-\end{bmatrix}</script><p>例如，</p>
-<script type="math/tex; mode=display">
-\begin{bmatrix} 1&2\\3&4 \end{bmatrix} \otimes \begin{bmatrix} 0&5\\6&7 \end{bmatrix} 
-= \begin{bmatrix} 1  \begin{bmatrix} 0&5\\6&7 \end{bmatrix}  &2  \begin{bmatrix} 0&5\\6&7 \end{bmatrix}  \\3  \begin{bmatrix} 0&5\\6&7 \end{bmatrix}  &4  \begin{bmatrix} 0&5\\6&7 \end{bmatrix}  \end{bmatrix}
-= \begin{bmatrix} 
-1 \times 0 & 1 \times 5 & 2 \times 0 &  2 \times 5\\
-1 \times 6 & 1 \times 7 & 2 \times 6 &  2 \times 7\\
-3 \times 0 & 3 \times 5 & 4 \times 0 &  4 \times 5\\
-3 \times 6 & 3 \times 7 & 4 \times 6 &  4 \times 7
-\end{bmatrix}
-= \begin{bmatrix} 
-0 & 5 & 0 &  10\\
-6 & 7 & 12 &  14\\
-0 & 15 & 0 &  20\\
-18 & 21 & 24 &  28
-\end{bmatrix}</script><p>为了在图生成中使用Kronecker积，我们将两个图的Kronecker积定义为两个图的邻接矩阵的Kronecker积。<br>从初始矩阵$K_{1}$(图的邻接矩阵)开始，我们迭代Kronecker积以生成更大的图 $K_{2}=K_{1}\otimes K_{1},K_{3}=K_{2}\otimes K_{1} \dots$，$m$ 阶的Kronecker图定义为</p>
-<script type="math/tex; mode=display">
-K_{1}^{[m]}=\dots K_{m}=\underbrace{K_1 \otimes K_1 \otimes \dots K_1}_{\text{m times}}=K_{m-1} \otimes K_1</script><p><img src="/images/16164160033041.jpg" srcset="/img/loading.gif" lazyload alt="small_kronecker"></p>
-<p>直观地，可以将Kronecker幂构造想象为图中的社区的递归增长，其中社区中的节点递归地扩展为社区的微型副本。Kronecker初始矩阵 $K_1$ 的选择可以改变，这会迭代影响较大图形的结构。<br><img src="/images/16164159880936.jpg" srcset="/img/loading.gif" lazyload alt="initiator"></p>
-<h4 id="随机的Kronecker图"><a href="#随机的Kronecker图" class="headerlink" title="随机的Kronecker图"></a>随机的Kronecker图</h4><p>到目前为止，我们仅考虑了具有二进制值 ${0,1}$的初始矩阵 $K_1$。但是，从此类初始矩阵生成的图在度数分布和其他属性中具有“阶梯”效应：由于 $K_1$ 的离散性质，个别值非常频繁地出现。</p>
-<p>为了消除这种影响，通过放宽初<strong>始矩阵中的条目只能采用二进制值</strong>这个假设来引入随机性。取而代之的是可以采用 $[0,1]$ 范围上的值的矩阵 $\Theta_1$，并且每个值都代表该特定边出现的概率。这样矩阵（以及所有生成的较大矩阵乘积）表示该矩阵在所有可能图上的概率分布。</p>
-<p>更具体地说，对于概率矩阵 $\Theta_1$，我们计算 $k^{th}$ Kronecker幂 $\Theta_k$ 作为大型随机邻接矩阵。每个 $\Theta_k$ 中的值 $p_{uv}$ 则代表边 $(u,v)$ 出现的概率。（请注意，概率总和不必为1，因为每个边缘出现的概率与其他边缘无关）</p>
-<p><img src="https://i.loli.net/2020/06/12/JoiyXHvrLMYltae.png" srcset="/img/loading.gif" lazyload alt="stochastic_graphs"></p>
-<p>为了获得图的一个实例，通过以随机邻接矩阵中相应条目给出的概率对每个边进行采样，然后从该分布中进行采样。采样可以被认为是抛具有偏差的硬币的结果，其中偏差被矩阵中的每个条目参数化。</p>
-<p>但是，这意味着简单的生成实例的时间是图形大小的平方，即 $O(N^2)$；当具有100万个节点，我们抛100万$\times$100万次硬币。</p>
-<h4 id="Kronecker-随机图的生成过程"><a href="#Kronecker-随机图的生成过程" class="headerlink" title="Kronecker 随机图的生成过程"></a>Kronecker 随机图的生成过程</h4><p>存在一种快速启发式生成图形的过程，该过程所需时间随着边数量线性变化。</p>
-<p>总体思路可以描述如下：对于每个边缘，我们以概率 $p_{uv} \in \Theta_1$递归地选择大随机矩阵的子区域，直到我们下降到大随机矩阵的单个单元为止。我们将边缘放置在那里。对于Kronecker图的 $k^{th}$ 幂 $\Theta_k$，将需要 $k$ 次下降步骤。</p>
-<p>例如，考虑 $\Theta_1$ 是一个 $2 \times 2$ 的矩阵</p>
-<script type="math/tex; mode=display">
-\Theta =\begin{bmatrix}
-a & b \\
-c & d \end{bmatrix}</script><p>对于具有 $n=2^k$ 个节点的图 $G$</p>
+<p>$p$ 的均值为 $\frac{k}{(n-1)}$，设定一个阈值 $\epsilon$，有如下的关系：</p>
 <ul>
-<li><p>创建归一化矩阵 $L_{uv}=\frac{p_{uv}}{\sum_{u,v}p_{uv}},\quad p_{uv} \in \Theta_1$</p>
-</li>
-<li><p>对于每个边缘：</p>
-<ul>
-<li>For $i=1 \dots k:$<ul>
-<li>初始 $x=0,y=0$</li>
-<li>以概率 $L_{uv}$ 选择行和列</li>
-<li>下降到 $G$ 的第 $i$ 级象限$(u,v)$<ul>
-<li>$x=x+u \cdot 2^{k-1}$</li>
-<li>$y=y+v \cdot 2^{k-1}$</li>
+<li>$k=1-\epsilon$，所有的子图的规模均在$\Omega(\log n)$</li>
+<li>$\bar{k}=1+\epsilon$，则存在1个连通组件的大小为 $\Omega(n)$，而所有其他组件大小都为 $\Omega(\log n)$<br>用图来展示一下效果，有：<br><img src="/images/16164132021880.jpg" srcset="/img/loading.gif" lazyload alt=""><h4 id="真实网络和ER随机图的关系总结"><a href="#真实网络和ER随机图的关系总结" class="headerlink" title="真实网络和ER随机图的关系总结"></a>真实网络和ER随机图的关系总结</h4><h5 id="真实网络和ER随机图的关系"><a href="#真实网络和ER随机图的关系" class="headerlink" title="真实网络和ER随机图的关系"></a>真实网络和ER随机图的关系</h5></li>
+<li>对于一个大的连通图而言，其分布和随机图相似</li>
+<li>对于平均的路径长度，真实网络和随机图相似</li>
+<li>聚类系数和度的分布和随机图有所不同</li>
 </ul>
-</li>
-<li>将边 $(x,y)$ 添加到 $G$</li>
+<h5 id="ER随机图的局限性"><a href="#ER随机图的局限性" class="headerlink" title="ER随机图的局限性"></a>ER随机图的局限性</h5><ul>
+<li>随机图的度分布和真实网络的度分布不同</li>
+<li>真实网络的大的连通子图不是通过随机图的变形来实现的</li>
+<li>由于聚类系数过小，很难去确定一个局部结构</li>
+<li>真实网络并不是一个随机图，我们只能通过这种随机生成的方式去逼近模拟</li>
 </ul>
-</li>
+<h5 id="随机图的作用"><a href="#随机图的作用" class="headerlink" title="随机图的作用"></a>随机图的作用</h5><ul>
+<li>作为一种比较标准，与真实网络进行比较</li>
+<li>使我们能够了解到，随机过程会影响到图中的某个属性</li>
 </ul>
-</li>
-</ul>
-<p>如果 $k=3$，且对于每一步 $i$，选择象限 $b_{(0,1)},c_{(0,1)},d_{(0,1)}$ 分别基于 $L$ 的归一化概率，有</p>
-<script type="math/tex; mode=display">
-x=0\cdot 2^{3-1}+1\cdot 2^{3-2}+1\cdot 2^{3-3}=0\cdot 2^2+1\cdot 2^1+1\cdot2^{0}=3\\
-y=1\cdot 2^{3-1}+0\cdot 2^{3-2}+1\cdot 2^{3-3}=1\cdot 2^2+0\cdot 2^1+1\cdot2^{0}=5</script><p>因此，我们将边$(3,5)$添加到图中。</p>
-<p>在实践中，随机Kronecker图模型能够生成与现实网络的属性非常匹配的图。要阅读有关Kronecker图模型的更多信息，请参阅 <em>J Leskovec et al., Kronecker Graphs: An Approach to Modeling Networks (2010)</em>。</p>
 
             </div>
             <hr>
@@ -399,12 +326,18 @@ y=1\cdot 2^{3-1}+0\cdot 2^{3-2}+1\cdot 2^{3-3}=1\cdot 2^2+0\cdot 2^1+1\cdot2^{0}
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2021/03/22/%E5%9B%BE%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94P2-3-%E5%B0%8F%E4%B8%96%E7%95%8C%E7%BD%91%E7%BB%9C/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">图网络基础——P2.3-小世界网络</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/03/22/%E5%9B%BE%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94P2-2-%E9%9A%8F%E6%9C%BA%E5%9B%BE/">
-                        <span class="hidden-mobile">图网络基础——P2.2-随机图</span>
+                      <a href="/2021/03/22/%E5%9B%BE%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94P2.1-%E7%BD%91%E7%BB%9C%E5%B1%9E%E6%80%A7/">
+                        <span class="hidden-mobile">图网络基础——P2.1-网络属性</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
