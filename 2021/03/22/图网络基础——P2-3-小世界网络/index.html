@@ -327,12 +327,12 @@ a_{m1}\textbf{B} & \dots & a_{mn}\textbf{B} \\
 K_{1}^{[m]}=\dots K_{m}=\underbrace{K_1 \otimes K_1 \otimes \dots K_1}_{\text{m times}}=K_{m-1} \otimes K_1</script><p><img src="/images/16164160033041.jpg" srcset="/img/loading.gif" lazyload alt="small_kronecker"></p>
 <p>直观地，可以将Kronecker幂构造想象为图中的社区的递归增长，其中社区中的节点递归地扩展为社区的微型副本。Kronecker初始矩阵 $K_1$ 的选择可以改变，这会迭代影响较大图形的结构。</p>
 <p><img src="/images/16164159880936.jpg" srcset="/img/loading.gif" lazyload alt="initiator"></p>
-<h4 id="随机的Kronecker图"><a href="#随机的Kronecker图" class="headerlink" title="随机的Kronecker图"></a>随机的Kronecker图</h4><p>目前，我们仅考虑了具有二进制值 ${0,1}$的初始矩阵 $K_1$。但是，从此类初始矩阵生成的图在度数分布和其他属性中具有“阶梯”效应：由于 $K_1$ 的离散性质，个别值非常频繁地出现。</p>
+<h4 id="随机的Kronecker图"><a href="#随机的Kronecker图" class="headerlink" title="随机的Kronecker图"></a>随机的Kronecker图</h4><p>目前，我们仅考虑了具有二进制值 ${0,1}$ 的初始矩阵 $K_1$。但是，从此类初始矩阵生成的图在度数分布和其他属性中具有“阶梯”效应：由于 $K_1$ 的离散性质，个别值非常频繁地出现。</p>
 <p>为了消除这种影响，通过放宽初<strong>始矩阵中的条目只能采用二进制值</strong>这个假设来引入随机性。取而代之的是可以采用 $[0,1]$ 范围上的值的矩阵 $\Theta_1$，并且每个值都代表该特定边出现的概率。这样矩阵（以及所有生成的较大矩阵乘积）表示该矩阵在所有可能图上的概率分布。</p>
 <p>更具体地说，对于概率矩阵 $\Theta_1$，我们计算 $k^{th}$ Kronecker幂 $\Theta_k$ 作为大型随机邻接矩阵。每个 $\Theta_k$ 中的值 $p_{uv}$ 则代表边 $(u,v)$ 出现的概率。（请注意，概率总和不必为1，因为每个边缘出现的概率与其他边缘无关）</p>
 <p><img src="/images/16164858812539.jpg" srcset="/img/loading.gif" lazyload alt="stochastic_graphs"></p>
 <p>为了获得图的一个实例，通过以随机邻接矩阵中相应条目给出的概率对每个边进行采样，然后从该分布中进行采样。采样可以被认为是抛具有偏差的硬币的结果，其中偏差被矩阵中的每个条目参数化。</p>
-<p>但是，这意味着简单的生成实例的时间是图形大小的平方，即 $O(N^2)$；当具有100万个节点，我们抛100万$\times$100万次硬币。</p>
+<p>但是，这意味着简单的生成实例的时间是图形大小的平方，即 $O(N^2)$；当具有100万个节点，我们需要抛 100万$\times$100万 次硬币。</p>
 <h4 id="Kronecker-随机图的生成过程"><a href="#Kronecker-随机图的生成过程" class="headerlink" title="Kronecker 随机图的生成过程"></a>Kronecker 随机图的生成过程</h4><p>存在一种快速启发式生成图形的过程，该过程所需时间随着边数量线性变化。</p>
 <p>总体思路可以描述如下：对于每个边缘，我们以概率 $p_{uv} \in \Theta_1$递归地选择大随机矩阵的子区域，直到我们下降到大随机矩阵的单个单元为止。我们将边缘放置在那里。对于Kronecker图的 $k^{th}$ 幂 $\Theta_k$，将需要 $k$ 次下降步骤。</p>
 <p>例如，考虑 $\Theta_1$ 是一个 $2 \times 2$ 的矩阵</p>
@@ -363,7 +363,7 @@ c & d \end{bmatrix}</script><p>对于具有 $n=2^k$ 个节点的图 $G$</p>
 <script type="math/tex; mode=display">
 x=0\cdot 2^{3-1}+1\cdot 2^{3-2}+1\cdot 2^{3-3}=0\cdot 2^2+1\cdot 2^1+1\cdot2^{0}=3\\
 y=1\cdot 2^{3-1}+0\cdot 2^{3-2}+1\cdot 2^{3-3}=1\cdot 2^2+0\cdot 2^1+1\cdot2^{0}=5</script><p>因此，我们将边$(3,5)$添加到图中。</p>
-<p>在实践中，随机Kronecker图模型能够生成与现实网络的属性非常匹配的图。要阅读有关Kronecker图模型的更多信息，请参阅 <em>J Leskovec et al., Kronecker Graphs: An Approach to Modeling Networks (2010)</em>。</p>
+<p>按照上述启发式方法，可以逐个生成连边，直到连边数满足我们的需求为止。Kronecker Graph的度量指标与相近规模的真实网络十分接近。要阅读有关Kronecker图模型的更多信息，请参阅 <em>J Leskovec et al., Kronecker Graphs: An Approach to Modeling Networks (2010)</em>。</p>
 
             </div>
             <hr>
