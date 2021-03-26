@@ -4,6 +4,62 @@
   
     
     <entry>
+      <title>图网络方法——P2谱聚类</title>
+      <link href="2021/03/24/%E5%9B%BE%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95%E2%80%94%E2%80%94P2%E8%B0%B1%E8%81%9A%E7%B1%BB/"/>
+      <url>2021/03/24/%E5%9B%BE%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95%E2%80%94%E2%80%94P2%E8%B0%B1%E8%81%9A%E7%B1%BB/</url>
+      
+        <content type="html"><![CDATA[<h3 id="谱聚类"><a href="#谱聚类" class="headerlink" title="谱聚类"></a>谱聚类</h3><p>在这部分，我们研究了谱方法的一个重要类别,从而在全局层次内理解网络。“谱”是指从图得出的矩阵的谱或特征值，这可以使我们深入了解图本身的结构。特别是在理解探索频谱聚类算法时，该算法利用这些工具对图中的节点进行聚类。</p><p>频谱聚类算法通常包括三个基本阶段。</p><ol><li>预处理：构造图的矩阵表示形式，例如邻接矩阵（但我们将探索其他选项）</li><li>分解：计算矩阵的特征向量和特征值，并使用它们创建低维表示空间</li><li>分组：根据集群在该空间中的表示将点分配给集群</li></ol><h3 id="问题定义及评价指标"><a href="#问题定义及评价指标" class="headerlink" title="问题定义及评价指标"></a>问题定义及评价指标</h3><p>让我们公式化我们要解决的任务。我们从无向图 $G(V, E)$ 开始。我们的目标是用某种方法将 $V$ 分为两个不相交的组 $A, B$ (即 $A \cap B = \emptyset$  且 $A \cup B = V$) ，使<strong>组内部的连接数最大化，并使两个组之间的连接数最小</strong>。</p><p>为了进一步公式化目标，下面介绍一些术语:</p><ul><li><strong>Cut(割)</strong>: 表示两个不相交的节点集之间有多少连接。 $cut(A, B) = \sum_{i \in A, j \in B} w_{ij}$ 其中 $w_{ij}$ 是节点 $i$ 和 $j$ 之间边的权重。</li><li><strong>Minimum cut(最小割):</strong>  $\arg \min_{A, B} cut(A, B)$</li></ul><p>由于我们要尽量减少 $A$ 和 $B$ 之间的连接数, 决定以<strong>最小割</strong>为优化目标。但是这种方式最终会产生非常不直观的集群——我们通常可以简单地设置 $A$ 为一个几乎没有传出连接的单节点，$B$ 为网络中的其它部分，从而获得一个很小的<strong>割</strong>。而我们需要的是一种衡量内部集群连接性的方法。</p><p>引入<strong>传导性</strong>(<strong>conductance</strong>)可以平衡组内和组间连接性的问题。</p><p>我们定义传导性为 <script type="math/tex">\phi(A, B) = \frac{cut(A, B)}{min(vol(A), vol(B))}</script> 其中$cut(A, B)$ 表示A和B之间的连边权重之和，$vol(A)=\sum_{i \in A}k_i$ 表示A内部节点的连边的权重之和。可以粗略地认为传导性类似于表面积与体积之比：分子为 $A$ 和 $B$ 共享曲面的面积，同时分母努力确保 $A$ 和 $B$ 之间具有相似的体积。</p><p><img src="/images/16165792588439.jpg" alt=""></p><p>由于采取这种方法 ，选择 $A$ 和 $B$ 并且最小化它们的传导性，相比最小化割具有更均衡的分区。 由于要最大程度地减小电导是一个 NP-hard 问题，因此如何有效地找到一个良好的分区是现在需要面临的挑战。</p><p>然而很难通过启发式方法找到最优分割，于是，谱聚类登场了。</p><h3 id="频谱图分割"><a href="#频谱图分割" class="headerlink" title="频谱图分割"></a>频谱图分割</h3><p>频谱图分割是一种允许我们使用特征向量确定传导性的方法。首先介绍频谱图理论的一些基本技术开始。</p><p>频谱图理论的目的是分析代表图形的矩阵的“频谱”。所谓频谱是指表示图的矩阵，按照其幅值大小排序及其对应的特征值 $\lambda_{i}$ 的集合 $\Lambda = \{\lambda_1, \ldots, \lambda_n\}$ 。比如 d-正则图的邻接矩阵的最大特征向量/特征值对是全一向量  $x = (1, 1, \ldots, 1)$, 并且特征值 $\lambda = d$。</p><p>可以使用频谱图理论分析的矩阵：</p><ol><li><p>邻接矩阵: 由于该矩阵与图结构直接相关，因此它是一个很好的切入点。它还具有对称的重要特性，这意味着它具有完整的实值正交特征向量谱</p></li><li><p>拉普拉斯矩阵 $L$: 定义 $L = D - A$ ，其中 $D$ 是对角矩阵， $D_{ii}$ 表示节点 $i$ 的度。 $A$ 是图的邻接矩阵。拉普拉斯矩阵使我们离图的直接结构更远，但是又具有一些有趣的特性，这些特性使我们更加关注于图的更深层次结构方面的内容。我们注意到，全 1 向量是特征值为 0 的拉普拉斯矩阵的特征向量。最后，由于 $L$ 是半正定的, 这意味着它有三个等效条件：它的特征值都是非负的，对于某些矩阵 $N$ 有 $L = N^T N$ 并且对于每个向量 $x$ 有 $x^T Lx \geq 0$ 。这个属性使我们可以使用线性代数工具来理解 $L$ ，从而理解原始图。</p></li></ol><p>特别的， $\lambda_2$ 作为 $L$ 第二小的特征值，对它的研究使我们在理解图聚类方面取得了长足的进步。根据瑞利商理论，我们有 $\lambda_2 = \min_{x: x^T w_1 = 0} \frac{x^T L x}{x^T x}$ 其中 $w_1$ 是特征值 $\lambda_1$ 对应的特征向量；换句话说，我们将向量子空间中与第一个特征向量正交的目标最小化，以便找到第二个特征向量，($L$ 是对称的，因此具有特征值的正交基)。在高层次上，瑞利商将特征向量搜索构架为一个优化问题，使我们可以运用优化技术。注意，目标值并不依赖于 $x$ 的大小，因此可以将其大小限制为 1。另外请注意我们知道的 $L$ 的第一个向量是特征值为 0 的全为一的向量。所以说 $x$ 正交于这个向量等于说 $\sum_i x_i = 0$。</p><p>使用 $L$ 的这些属性和定义可以写出对于 $\lambda_2$ 更具体的公式：</p><script type="math/tex; mode=display">\lambda_2 = \min_x \frac{\sum_{(i, j) \in E} (x_i - x_j)^2}{\sum_i x_i^2} \\\text{subject to} \quad \sum_i x_i = 0</script><p>如果我们另外限制 $x$ 为单位长度，目标函数将会转换为 $\min_x \sum_{(i, j) \in E} (x_i - x_j)^2$.</p><p>$\lambda_2$ 与我们找到图的最佳分割的最初目标有何关系？让我们将分区 $(A,B)$ 表示为向量 $y$ ，并且 $y_i = 1$ if $i \in A$ and $y_i = -1$ if $i \in B$。 我们先尝试在执行分区大小平衡问题 ($\vert A\vert = \vert B\vert$) 的同时尽量减少割，而不是使用传导性，这就相当于 $\sum_{i}y_{i}=0$。基于这个大小限制，可以最小化分区的割。比如寻找 $y$ 最小化 $\sum_{(i, j) \in E} (y_i - y_j)^2$ ， $y$ 的值必须是 $+1$ 或者 $-1$ ，这样会使得 $y$ 的长度是固定的。这个优化问题看起来很像 $\lambda_2$ 的定义，事实上根据上述发现，我们可以通过最小化拉普拉斯矩阵的 $\lambda_2$ 达成这一目标，并且最佳聚类 $y$ 由其对应的特征向量（称为Fiedler向量）给出。</p><p>现在，我们已经在 $L$ 的特征值和图划分之间建立了联系，让我们进一步推动连接，看看是否可以摆脱硬约束 $\vert A\vert = \vert B\vert$ ，也许更灵活的传导性度量与 $\lambda_2$ 之间存在某种关系。在这里我们重新定义传导性：如果图 $G$ 被分为 $A$ 和 $B$ 且 $\vert A\vert \le \vert B\vert$ ，那么割的传导性定义为$\beta = cut(A, B)/\vert A\vert$。这将 $\beta$ 和$\lambda_2$ 建立了关系：特别的 $\frac{\beta^2}{2k_{max}} \leq \lambda_2 \leq 2\beta$，其中 $k_ {max}$是图中的最大节点度，这个不等式称之为Cheeger不等式。由于我们需要最小化传导性 $\beta$，因此 $\lambda_2$ 的上界在图分割中非常有用，该不等式可以使我们能够很好地估计传导性 $\beta$。相应的特征向量被定义为:</p><script type="math/tex; mode=display">x_{i}=\left\{\begin{array}{ll}-\frac{1}{a} & \text { if } i \in A \\+\frac{1}{b} & \text { if } i \in B\end{array}\right.</script><p>$x_i$ 的符号对应于每个节点的分配。</p><h3 id="频谱分割算法"><a href="#频谱分割算法" class="headerlink" title="频谱分割算法"></a>频谱分割算法</h3><p>将所有已知汇总起来说明频谱分割算法。</p><ol><li>预处理：利用图的邻接矩阵 $A$，度矩阵 $D$，计算拉普拉斯矩阵 $L=D-A$</li><li>分解：计算拉普拉斯矩阵的特征值和特征向量，其中第二小特征值为 $\lambda_2$ ，对应的特征向量为 $x_2$<br><img src="/images/16165819072652.jpg" alt=""></li><li>分组：对上述特征向量 $x_2$ 进行分组，比如说可以利用正负或者中位数进行划分，如下图所示，节点123特征向量为正，划分为一组，节点456特征向量为负，划分为一组。<br><img src="/images/16165819637374.jpg" alt=""></li></ol><p>一些需要考虑的实际情况：</p><ul><li><p>如何在第3步中选择分割点？这里比较灵活——既可以使用简单的方法（例如零分割或中值分割），也可以使用更复杂的方法（例如最小化一维的标准化切割）。</p></li><li><p>如何将图划分为两个以上的集群？可以将图先分为两个簇，然后再细分这些簇，依此类推（Hagen等人，92）但这可能是效率低下且不稳定的。取而代之的是，可以使用多个特征向量进行聚类，让每个节点由其在这些特征向量中的组成表示，然后对这些表示进行聚类，例如通过k-means（Shi-Malik ‘00）聚类，这种方法在最近的论文中经常使用。从某种意义上说，该方法在原理上也更为可靠，它近似于最佳的K-way归一化切割，强调了内部聚类并将点映射到一个充分分离的嵌入式空间。此外，使用特征向量可尽量减少丢失的信息，因为我们可以选择使（更多信息）分量与更大的特征值相对应。</p></li><li><p>如何选择簇数？我们可以尝试选择聚类数 $k$ 以最大化<strong>eigengap</strong>，<strong>eigengap</strong>即两个连续特征值之间的绝对差（按降序排列）。</p></li></ul><h3 id="基于motif的谱聚类"><a href="#基于motif的谱聚类" class="headerlink" title="基于motif的谱聚类"></a>基于motif的谱聚类</h3><p>如果我们想通过比原始边更高级别的模式进行聚类怎么办？我们可以将图形 <strong>Motif</strong> 聚类为“模块”。并以类似的方式做所有事情。先从提出关于割，体积和传导性的类似定义开始：</p><ul><li>$cut_M(S)$ 是 Motif 的数量，其中Motif中的某些节点位于割的一侧，而其余节点在割的另一侧</li><li>$vol_M(S)$ 是Motif $M$ 中终点在 $S$ 的端点数</li><li>定义 $\phi(S) = cut_M(S) / vol_M(S)$</li></ul><p>我们如何找到Motif簇? 给定一个Motif $M$ 和图 $G$ ，我们需要找到一组节点 $S$ 从而最小化 $\phi_M(S)$。 这是一个NP-hard 问题，因此我们将再次使用谱方法，即<strong>Motif谱聚类</strong>：</p><ol><li>预处理: 创建一个矩阵 $W^{(M)}$， $W_{ij}^{(M)}$ 表示边 $(i, j)$ 在 $M$ 中出现的次数</li><li>分解: 对矩阵 $W^{(M)}$ 使用标准谱聚类</li><li>分组: 与标准谱聚类相同</li></ol><p>同样，我们可以有一个 Cheeger 不等式的 motif 形式：$\phi_{M}(S) \leq 4 \sqrt{\phi_{M}^{<em>}}$ ，其中 $\phi_{M}^{</em>}$ 是最佳传导性。</p><p>基于Motif的谱聚类方法可以应用于食物网（motif由生物学决定）和基因调控网络。</p><p>sklearn中提到了谱聚类算法的使用说明：</p><ul><li>边的权重需要满足相似度(similarity)的分布特点，比如必须是非负的，否则谱聚类会失效，建议使用高斯相似度函数把原始的边权重转换为相似度</li><li>需要指定群组数量，谱聚类只适合少量群组的聚类，不适合大量群组的聚类</li></ul><p>参考文献：<br>[1] 关于谱聚类的实施细节和推导，可参考: <a href="https://zhuanlan.zhihu.com/p/139577332">https://zhuanlan.zhihu.com/p/139577332</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 学习笔记 </category>
+          
+          <category> 图网络 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 谱聚类 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>图网络方法——P1网络中的结构角色</title>
+      <link href="2021/03/23/%E5%9B%BE%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95%E2%80%94%E2%80%94P1%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E7%BB%93%E6%9E%84%E8%A7%92%E8%89%B2/"/>
+      <url>2021/03/23/%E5%9B%BE%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95%E2%80%94%E2%80%94P1%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E7%BB%93%E6%9E%84%E8%A7%92%E8%89%B2/</url>
+      
+        <content type="html"><![CDATA[<h3 id="角色（Roles）"><a href="#角色（Roles）" class="headerlink" title="角色（Roles）"></a>角色（Roles）</h3><p>role指的是节点的角色或功能（function），我们可以把角色相近的节点归类为同一种role，比如度很小的节点可以归类为边缘节点。</p><p>注意，role只要求角色相近，这种相近往往只需要参考节点所在的子图来判断即可，如果要在全图上判断两个节点是否是结构等同（structural equivalence），就需要判断图中所有其他节点与这两个节点的关系是否完全相同。很显然，角色相同的节点未必是结构等同的，比如下图中，红色节点的角色都是星型结构的中心节点，但是它们与其他节点的结构关系几乎各不相同。</p><p><img src="/images/16165049968735.jpg" alt=""></p><h3 id="角色发现算法"><a href="#角色发现算法" class="headerlink" title="角色发现算法"></a>角色发现算法</h3><p>我们可以利用一些模型来找到角色相近的节点，RolX（Role eXtraction）是一个常用的角色发现方法（Role Discovery Method）。RolX 的输入数据是图的邻接矩阵，首先进行特征提取（Feature Extraction），得到每个节点的特征向量（Feature Vector），然后进行角色提取（Role Extraction），得到节点 <em> 角色矩阵和角色 </em> 特征矩阵。<br><img src="/images/16165054921715.jpg" alt=""></p><p>特征提取是第一个关键步骤，这里所指的特征是针对每个节点来计算的，常见特征分三类——Local、Egonet和Recursive。</p><ul><li>Local Feature是针对节点本身的特征，比如度、集群系数等；</li><li>Egonet是由节点及节点的邻居节点构成的子图，可以针对这个子图计算各种特征，比如子图的节点数和边数、节点的平均度数、节点的平均集群系数等；</li><li>Recursive Feature是针对已经计算出的特征进行二次加工，得到特征的特征，比如邻居节点的特征的平均值（类似GCN的思路），或者当前节点某些特征的统计量（均值、求和等）。</li></ul><p>Role Extraction是第二个关键步骤，它的思路是在Node <em> Feature Matrix 的基础上进行无监督建模，把节点划分到不同集合中，每个集合代表一种角色。最直接的方法是进行 NMF（non-negative matrix factorization，非负因式分解），直接把Node </em> Feature Matrix分解成 Node <em> Role Matrix 和 Role </em> Feature Matrix两个矩阵，关于这个方法的细节可以参考<a href="http://web.eecs.umich.edu/~dkoutra/papers/12-kdd-recursiverole.pdf">RoIX Paper</a>。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 学习笔记 </category>
+          
+          <category> 图网络 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 角色 </tag>
+            
+            <tag> 角色发现算法 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>图网络基础——P3-Motifs and Graphlets</title>
       <link href="2021/03/20/%E5%9B%BE%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94P3-Motifs%20and%20Graphlets/"/>
       <url>2021/03/20/%E5%9B%BE%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94P3-Motifs%20and%20Graphlets/</url>

@@ -230,10 +230,10 @@
             <h1 style="display: none">图网络方法——P1网络中的结构角色</h1>
             
             <div class="markdown-body">
-              <h4 id="角色（Roles）"><a href="#角色（Roles）" class="headerlink" title="角色（Roles）"></a>角色（Roles）</h4><p>role指的是节点的角色或功能（function），我们可以把角色相近的节点归类为同一种role，比如度很小的节点可以归类为边缘节点。</p>
+              <h3 id="角色（Roles）"><a href="#角色（Roles）" class="headerlink" title="角色（Roles）"></a>角色（Roles）</h3><p>role指的是节点的角色或功能（function），我们可以把角色相近的节点归类为同一种role，比如度很小的节点可以归类为边缘节点。</p>
 <p>注意，role只要求角色相近，这种相近往往只需要参考节点所在的子图来判断即可，如果要在全图上判断两个节点是否是结构等同（structural equivalence），就需要判断图中所有其他节点与这两个节点的关系是否完全相同。很显然，角色相同的节点未必是结构等同的，比如下图中，红色节点的角色都是星型结构的中心节点，但是它们与其他节点的结构关系几乎各不相同。</p>
 <p><img src="/images/16165049968735.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
-<h4 id="角色发现算法"><a href="#角色发现算法" class="headerlink" title="角色发现算法"></a>角色发现算法</h4><p>我们可以利用一些模型来找到角色相近的节点，RolX（Role eXtraction）是一个常用的角色发现方法（Role Discovery Method）。RolX 的输入数据是图的邻接矩阵，首先进行特征提取（Feature Extraction），得到每个节点的特征向量（Feature Vector），然后进行角色提取（Role Extraction），得到节点 <em> 角色矩阵和角色 </em> 特征矩阵。<br><img src="/images/16165054921715.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
+<h3 id="角色发现算法"><a href="#角色发现算法" class="headerlink" title="角色发现算法"></a>角色发现算法</h3><p>我们可以利用一些模型来找到角色相近的节点，RolX（Role eXtraction）是一个常用的角色发现方法（Role Discovery Method）。RolX 的输入数据是图的邻接矩阵，首先进行特征提取（Feature Extraction），得到每个节点的特征向量（Feature Vector），然后进行角色提取（Role Extraction），得到节点 <em> 角色矩阵和角色 </em> 特征矩阵。<br><img src="/images/16165054921715.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
 <p>特征提取是第一个关键步骤，这里所指的特征是针对每个节点来计算的，常见特征分三类——Local、Egonet和Recursive。</p>
 <ul>
 <li>Local Feature是针对节点本身的特征，比如度、集群系数等；</li>
@@ -274,6 +274,29 @@
                   
                 </p>
               
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/03/24/%E5%9B%BE%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95%E2%80%94%E2%80%94P2%E8%B0%B1%E8%81%9A%E7%B1%BB/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">图网络方法——P2谱聚类</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/03/20/%E5%9B%BE%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94P3-Motifs%20and%20Graphlets/">
+                        <span class="hidden-mobile">图网络基础——P3-Motifs and Graphlets</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
               
             </div>
 

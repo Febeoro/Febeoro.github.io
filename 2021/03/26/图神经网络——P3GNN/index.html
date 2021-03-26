@@ -1,0 +1,552 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="GCN, SAGE, GAT">
+  <meta name="author" content="Febeoro">
+  <meta name="keywords" content="">
+  
+  <title>图神经网络——P3GNN - Febeoro</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"febeoro.github.io","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Febeoro</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="图神经网络——P3GNN">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-03-26 15:03" pubdate>
+        2021年3月26日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      23
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">图神经网络——P3GNN</h1>
+            
+            <div class="markdown-body">
+              <h3 id="Graph-Neural-Network"><a href="#Graph-Neural-Network" class="headerlink" title="Graph Neural Network"></a>Graph Neural Network</h3><p>在上一节中，我们学习了如何使用“浅层编码器”表示图。这些技术为我们提供了在向量空间中表示图的强大方式，但也有其局限性。在本节中，我们将探索使用图神经网络克服限制的三种不同方法。</p>
+<h3 id="Limitation-of-“Shallow-Encoders”-浅层编码器”的局限性"><a href="#Limitation-of-“Shallow-Encoders”-浅层编码器”的局限性" class="headerlink" title="Limitation of  “Shallow Encoders”(浅层编码器”的局限性)"></a>Limitation of  “Shallow Encoders”(浅层编码器”的局限性)</h3><ul>
+<li>浅编码器无法缩放，因为每个节点都有唯一的嵌入。</li>
+<li>浅层编码器具有固有的传导性。它只能为单个固定图生成嵌入。</li>
+<li>不考虑节点的特征。</li>
+<li>不能将浅层编码器推广到具有不同损失函数的训练中。</li>
+</ul>
+<p>幸运的是，图神经网络可以解决上述限制。</p>
+<h3 id="Graph-convolutional-Networks-GCN-图神经网络"><a href="#Graph-convolutional-Networks-GCN-图神经网络" class="headerlink" title="Graph convolutional Networks(GCN, 图神经网络)"></a>Graph convolutional Networks(GCN, 图神经网络)</h3><p>传统上，神经网络是为固定大小的图设计的。例如，我们可以将图像视为网格图，或将一段文本视为线图。但是，现实世界中的大多数图具有任意大小和复杂的拓扑结构。因此，我们需要不同地定义GCN的计算图。</p>
+<p>假设给定图 $G=(V,A,X)$ :</p>
+<ul>
+<li>$V$ 是顶点集合</li>
+<li>$A$ 是邻接矩阵</li>
+<li>$X \in \mathbb{R}^{m \times|V|}$ 是节点的特征矩阵</li>
+</ul>
+<p><strong>计算图和广义卷积</strong><img src="https://i.loli.net/2020/05/16/CJnahtz93FykSOM.png" srcset="/img/loading.gif" lazyload alt="aggregate_neighbors" style="zoom:50%;" />假设示例图(上图左图)为图 $G$ 。我们的目标是定义在图 $G$ 上的GCN计算图。计算图应同时保持图 $G$ 的结构和合并节点的相邻要素。例如，节点的嵌入向量 $A$ 应该包括它的邻居 $\left\{B,C,D\right\}$ 并且和 $\left\{B,C,D\right\}$ 的顺序无关。一种方法是简单地取 $\left\{B,C,D\right\}$ 的平均值。通常，聚合函数(上图右图中的方框)必须是<strong>阶不变的</strong>(最大值，平均值等)。上图具有两层计算图 $G$ 如下所示:<img src="https://i.loli.net/2020/05/16/7StMl32PgOcz5hW.png" srcset="/img/loading.gif" lazyload alt="computation_graph"></p>
+<p>这里，每个节点都基于其邻居定义一个计算图。特别的，节点 $A$ 的计算图结构如下所示:（第0层是输入层，输入为节点特征 $X_{i}$ ):<img src="https://i.loli.net/2020/05/16/uNVmrZ6aywn9QGj.png" srcset="/img/loading.gif" lazyload alt="computation_graph_for_a" style="zoom:67%;" /></p>
+<h3 id="Deep-Encoders-深度编码器"><a href="#Deep-Encoders-深度编码器" class="headerlink" title="Deep Encoders(深度编码器)"></a>Deep Encoders(深度编码器)</h3><p>有了以上想法，这是节点 $v$ 使用平均聚合函数的每一层的数学表达式 :</p>
+<ul>
+<li>在第0层: $h_{v}^{0} = x_{v}$, 表示节点特征</li>
+<li>在第k层:<br>   $h_{v}^{k}=\sigma\left(W_{k} \sum_{u \in N(v)} \frac{h_{u}^{k-1}}{|N(v)|}+B_{k} h_{v}^{k-1}\right), \forall k \in\{1, \ldots, K\}$</li>
+</ul>
+<p>$h_{v}^{k-1}$ 是节点 $v$ 从上一层开始的嵌入。$|N(v)|$ 是节点 $v$ 的邻居数。$\sum_{u \in N(v)}\frac{h_{u}^{k-1}}{|N(v)|} $ 的目的是聚合节点 $v$ 上一层的所有邻居特征。$\sigma$ 是引入非线性的激活函数(例如ReLU)。$W_{k}$ 和 $B_{k}$ 是可训练的参数。</p>
+<ul>
+<li>输出层: $z_{v}=h_{v}^K$ 是K层嵌入后的最后的嵌入层。</li>
+</ul>
+<p>等效地，以上计算可以以写成整个图矩阵乘法的形式：</p>
+<script type="math/tex; mode=display">
+H^{l+1}=\sigma\left(H^{l} W_{0}^{l}+\tilde{A} H^{l} W_{1}^{l}\right) \text { such that } \tilde{A}=D^{-\frac{1}{2}} A D^{-\frac{1}{2}}</script><h3 id="Training-the-Model"><a href="#Training-the-Model" class="headerlink" title="Training the Model"></a>Training the Model</h3><p>我们可以为这些嵌入提供给任何损失函数，并进行随机梯度下降训练参数。例如，对于二进制分类任务，我们可以将损失函数定义为：</p>
+<script type="math/tex; mode=display">
+L=\sum_{v \in V} y_{v} \log \left(\sigma\left(z_{v}^{T} \theta\right)\right)+\left(1-y_{v}\right) \log \left(1-\sigma\left(z_{v}^{T} \theta\right)\right)</script><p>$y_{v}\in\left\{0,1\right\}$ 是节点类标签。$z_{v}$ 是编码器的输出。$\theta $ 是分类权重。$\sigma$ 可以是 <strong>sigmoid</strong> 函数。$\sigma(z^T_{v}\theta)$ 表示节点 $v$ 的预测概率。因此，如果标签为正 $(y_{v}=1)$，则损失函数方程将计算前半部分，否则，损失函数方程将计算后半部分。<br>我们还可以通过以下方式以无监督的方式训练模型：随机游走，图形分解，节点接近等。</p>
+<h3 id="Inductive-Capability-归纳能力"><a href="#Inductive-Capability-归纳能力" class="headerlink" title="Inductive Capability(归纳能力)"></a>Inductive Capability(归纳能力)</h3><p>GCN可以应用在图中看不见的节点。例如，如果使用节点 $A,B,C$ 训练模型，由于参数在所有节点之间共享，新添加的节点 $D,E,F$ 因此也可以进行评估。<img src="https://i.loli.net/2020/05/16/SdKRmfH4cXtIkjM.png" srcset="/img/loading.gif" lazyload alt="apply_to_new_nodes" style="zoom:50%;" /></p>
+<h3 id="GraphSAGE"><a href="#GraphSAGE" class="headerlink" title="GraphSAGE"></a>GraphSAGE</h3><p>到目前为止，我们已经探索了一种简单的邻域聚合方法，但是我们还可以将聚合方法概括为以下形式：</p>
+<script type="math/tex; mode=display">
+h_{v}^{K}=\sigma\left(\left[W_{k} A G G\left(\left\{h_{u}^{k-1}, \forall u \in N(v)\right\}\right), B_{k} h_{v}^{k-1}\right]\right)</script><p>对于节点 $v$，我们可以应用不同的汇总方法($AGG$)与将其邻居和节点 $v$ 本身的特征相连接。</p>
+<p>下面是一些常用的聚合函数：</p>
+<ul>
+<li>平均值：取其邻居的加权平均值。<script type="math/tex; mode=display">A G G=\sum_{u \in N_{v}} \frac{h_{u}^{k-1}}{|N(v)|}</script></li>
+<li>池化：转换邻居向量并应用对称向量函数( $\gamma$ 可以是按元素的均值或最大值)。<script type="math/tex; mode=display">A G G=\gamma(\left\{Qh_{u}^{k-1},\forall u\in N(v)\right\})</script></li>
+<li>LSTM：使用LSTM应用于重组后的邻居。<script type="math/tex; mode=display">A G G=LSTM(\left\{h_{u}^{k-1},\forall u\in \pi (N(v))\right\})</script></li>
+</ul>
+<h3 id="Graph-Attention-Networks-图注意力网络"><a href="#Graph-Attention-Networks-图注意力网络" class="headerlink" title="Graph Attention Networks(图注意力网络)"></a>Graph Attention Networks(图注意力网络)</h3><p>如果某些相邻节点携带的信息比其他节点更重要怎么办？在这种情况下，我们希望通过使用注意力技巧将不同的权重分配给不同的相邻节点。</p>
+<p>假设 $\alpha_{vu}$ 是节点 $u$ 向节点 $v$ 传递的信息的加权因子(重要性)。 根据上面的平均聚合函数，我们定义了 $\alpha=\frac{1}{|N(v)|}$。但是，我们也可以基于图的结构特性显式定义 $\alpha$。</p>
+<h4 id="Attention-Mechanism-注意力机制"><a href="#Attention-Mechanism-注意力机制" class="headerlink" title="Attention Mechanism(注意力机制)"></a><em>Attention Mechanism</em>(注意力机制)</h4><p>设 $\alpha_{uv}$ 为计算注意力机制 $a$ 的副产物，它根据节点对 $u,v$ 的消息计算注意力系数 $e_{vu}$：</p>
+<script type="math/tex; mode=display">
+e_{vu}=a(W_{k}h_{u}^{k-1}, W_{k}h_{v}^{k-1})</script><p>$e_{vu}$ 表示了节点 $u$ 向节点 $v$ 传递的信息的重要性，然后，我们使用 <strong>softmax</strong> 函数归一化系数以比较不同邻居之间的重要性：</p>
+<script type="math/tex; mode=display">
+\alpha=\frac{\exp(e_{vu})} {\sum_{k\in N(v) \exp (e_{v k})}}</script><p>因此有：</p>
+<script type="math/tex; mode=display">
+h_{v}^{k}=\sigma(\sum_{u \in N(v)}\alpha_{v u}W_{k}h_{u}^{k-1})</script><p>该方法与的选择的 $a$ 无关，并且可以与 $W_{k}$ 一起训练参数。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><strong>以下是有用的参考资料列表：</strong></p>
+<p><strong>教程和概述：</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1806.01261.pdf">Relational inductive biases and graph networks (Battaglia et al., 2018)</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1709.05584.pdf">Representation learning on graphs: Methods and applications (Hamilton et al., 2017)</a></li>
+</ul>
+<p><strong>基于注意力的邻居节点聚合：</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1710.10903.pdf">Graph attention networks (Hoshen, 2017; Velickovic et al., 2018; Liu et al., 2018)</a></li>
+</ul>
+<p><strong>整个图嵌入：</strong></p>
+<ul>
+<li>Graph neural nets with edge embeddings (<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1806.01261.pdf">Battaglia et al., 2016</a>; <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1704.01212.pdf">Gilmer et. al., 2017</a>)</li>
+<li>Embedding entire graphs (<a target="_blank" rel="noopener" href="https://dl.acm.org/citation.cfm?id=2969488">Duvenaud et al., 2015</a>; <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1603.05629.pdf">Dai et al., 2016</a>; <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1803.03324">Li et al., 2018</a>) and graph pooling (<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1806.08804.pdf">Ying et al., 2018</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1911.05954.pdf">Zhang et al., 2018</a>)</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1802.08773.pdf">Graph generation</a> and <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1802.04687.pdf">relational inference</a> (You et al., 2018; Kipf et al., 2018)</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1810.00826.pdf">How powerful are graph neural networks(Xu et al., 2017)</a></li>
+</ul>
+<p><strong>节点嵌入：</strong></p>
+<ul>
+<li>Varying neighborhood: <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1806.03536.pdf">Jumping knowledge networks Xu et al., 2018)</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1802.00910.pdf">GeniePath (Liu et al., 2018</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1906.04817.pdf">Position-aware GNN (You et al. 2019)</a></li>
+</ul>
+<p><strong>图神经网络的谱方法：</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1606.09375.pdf">Spectral graph CNN</a> &amp; <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1609.02907.pdf">ChebNet</a> [Bruna et al., 2015; Defferrard et al., 2016)</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1611.08097.pdf">Geometric deep learning (Bronstein et al., 2017; Monti et al., 2017)</a></li>
+</ul>
+<p><strong>其他GNN方法</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1905.12265.pdf">Pre-training Graph Neural Networks (Hu et al., 2019)</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1903.03894.pdf">GNNExplainer: Generating Explanations for Graph Neural Networks (Ying et al., 2019)</a></li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E5%9B%BE%E7%BD%91%E7%BB%9C/">图网络</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/GNN/">GNN</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
